@@ -15,7 +15,7 @@ public class EdgeImpl implements DirectedEdge
     private Vertex sourceVertex;
     private Vertex targetVertex;
 	private Graph graph;
-	GraphSearchResult tree
+	GraphSearchResult tree;
     
     //Constructor that initializes vertices, adds the vertices and sets the edge weight value
     public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, double edgeWeight, Graph graph)
