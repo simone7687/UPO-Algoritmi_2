@@ -2,8 +2,9 @@ package upo.graphimpl;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.stream.Collectors;
-import upo.graphimpl.Colors;
+import java.util.LinkedList;
+
+import upo.graph.Edge;
 import upo.graph.Graph;
 import upo.graph.GraphSearchResult;
 import upo.graph.SearchType;
@@ -13,42 +14,54 @@ public class GraphSearchResultImpl implements GraphSearchResult
 {
 	private SearchType type;
 	private Vertex source;
-	private Colors[] color;
-	private Vertex[] parent;
-	private double[] dist;
-	private int[] start;
-	private int[] end;
-	private int time;
-	private HashMap<Vertex, Integer> Dag;
+	private HashMap<Vertex, LinkedList<Vertex>> Dag;
 	private Graph graph;
-	
 
-	public GraphSearchResultImpl(SearchType type, Vertex source, Graph graph)
+	public GraphSearchResultImpl(SearchType type, Vertex source)
 	{
-		final int DIM = graph.edgeSet().size();
 		this.type = type;
 		this.source = source;
-		this.dist = new double[DIM];
-		this.color = new Colors[DIM];
-		this.start = new int[DIM];
-		this.end = new int[DIM];
-		this.parent = new Vertex[DIM];
-		this.time = 0;
-		this.graph = graph;
+	}
+
+	// TODO: java doc
+	public boolean addLeaves(Vertex v) 
+	{
+		// If the vertex is null, throws NullPointerException
+		if (v == null)
+			throw new NullPointerException("The given parameter is null");
 		
-		for(int i = 0; i < DIM; i++)
+		//Vertex exists
+		if (containsLeaves(v))
+			return false;
+		else
 		{
-			this.color[i] = Colors.WHITE;
-			this.dist[i] = Double.POSITIVE_INFINITY;
-			this.start[i] = Integer.MAX_VALUE;
-			this.end[i] = Integer.MAX_VALUE;
-		}		
+			//Adds the vertex and initializes an empty list
+			Dag.put(v, new LinkedList<Vertex>());
+			return true;
+		}
+	}
+
+	// TODO: java doc
+	private boolean keyExists(Vertex v)
+	{
+		return Dag.keySet().stream().anyMatch(x -> x.getLabel().equals(v.getLabel()));
+	}
+
+	// TODO: java doc
+	public boolean containsLeaves(Vertex v) 
+	{
+		// If the vertex is null or does not exist in the graph, returns false
+		if (v == null || !keyExists(v))
+			return false;
+		
+		return true;
 	}
 	
+	// TODO: java doc
 	@Override
 	public Iterator<Vertex> iterator() 
 	{
-		return graph.iterator();
+		return null;		//TODO: forse graph.iterator();
 	}
 
 	/**
@@ -94,19 +107,16 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	public double getDistance(Vertex v) throws UnsupportedOperationException, IllegalArgumentException 
 	{
 		if (!graph.containsVertex(v))
-			throw new IllegalArgumentException("The vertex is not contained in the current graph");
+			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
+
+		if (!containsLeaves(v))
+			return Double.POSITIVE_INFINITY;
 		
 		if (this.getType() != SearchType.BFS && this.getType() != SearchType.DIJKSTRA)
 			throw new UnsupportedOperationException("This type of visit is not supported.");	
 		
-		return dist[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))];
+		//TODO: return lunghezza / peso del percorso più breve tra il vertice sorgente Sorgente e v;
 	}
-	
-	public void setDistance(Vertex v, double dist)
-	{
-		this.dist[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))] = dist;
-	}
-
 
 	/**
      * Returns the parent of the target vertex v in the search tree/forest. If v is the root of a tree,
@@ -123,15 +133,18 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	@Override
 	public Vertex getParentOf(Vertex v) throws IllegalArgumentException 
 	{
-		if (!graph.containsVertex(v))
-			throw new IllegalArgumentException("The vertex is not contained in the current graph");
+		if (source == v)
+			return null;
 
-		return this.parent[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))];
-	}
-	
-	public void setParent(Vertex parent, Vertex v)
-	{
-		this.parent[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))] = parent;
+		for (Vertex x : Dag.keySet())
+		{
+			if(Dag.get(x).getFirst() == v);
+			{
+				return x;
+			}
+		}
+		
+		throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 	}
 
 	/**
@@ -150,14 +163,11 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	public int getStartTime(Vertex v) throws IllegalArgumentException 
 	{
 		if (!graph.containsVertex(v))
-			throw new IllegalArgumentException("The vertex is not contained in the current graph");
+			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 
-		return this.start[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))];
-	}
+		//TODO: Se v non è stato rilevato, questo metodo restituisce -1.
 	
-	public void setStartTime(Vertex v) 
-	{
-		start[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))] = time++;
+		//TODO: return Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato scoperto nella visita corrente (ovvero, quando v è diventato grigio).
 	}
 
 	/**
@@ -176,15 +186,13 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	public int getEndTime(Vertex v) throws IllegalArgumentException 
 	{
 		if (!graph.containsVertex(v))
-			throw new IllegalArgumentException("The vertex is not contained in the current graph");
+			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 		
-		return this.end[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))];
+		//TODO: Se v non è stato rilevato, questo metodo restituisce -1.
+		
+		//TODO: Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato chiuso nella visita corrente (cioè quando v è diventato nero).
 	}
 	
-	public void setEndTime(Vertex v) 
-	{
-		end[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))] = time++;
-	}
 	/**
      * Returns the weight of the edge between v1 and v2 in the current search result, if it exists. 
      * Otherwise, it returns an IllegalArgumentException.
@@ -201,17 +209,10 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	public double getEdgeWeight(Vertex v1, Vertex v2) throws IllegalArgumentException 
 	{
 		if (!graph.containsVertex(v1) || !graph.containsVertex(v2))
-			throw new IllegalArgumentException("The vertex is not contained in the current graph");
+			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 
-		return Graph.DEFAULT_EDGE_WEIGHT;
-	}
-	
-	public Colors getColor(Vertex v) {
-		return this.color[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))];
-	}
-	
-	public void setColor(Vertex v, Colors color) {
-		this.color[Dag.get(Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null))] = color;
-	}
+		//TODO: Restituisce il peso del bordo tra v1 e v2 nel risultato della ricerca corrente, se esiste.
 
+		//TODO: In caso contrario, restituisce un'eccezione IllegalArgumentException.
+	}
 }
