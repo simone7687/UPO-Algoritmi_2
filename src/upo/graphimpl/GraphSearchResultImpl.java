@@ -17,10 +17,11 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	private HashMap<Vertex, LinkedList<Vertex>> Dag;
 	private Graph graph;
 
-	public GraphSearchResultImpl(SearchType type, Vertex source)
+	public GraphSearchResultImpl(SearchType type, Vertex source, Graph graph)
 	{
 		this.type = type;
 		this.source = source;
+		this.graph = graph;
 	}
 
 	// TODO: java doc
