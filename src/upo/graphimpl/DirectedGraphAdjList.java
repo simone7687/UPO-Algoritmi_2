@@ -5,7 +5,6 @@ package upo.graphimpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,55 +51,6 @@ public class DirectedGraphAdjList implements Graph
 		return graph.keySet().iterator();
 	}
 	
-	//HELPERS
-	
-	/**
-	 * Checks if the Vertex exists in the HashMap keys
-	 * @param v
-	 * 			The vertex to find in the HashMap
-	 * @return
-	 * 			true if contained in the HashMap otherwise false
-	 */
-	private boolean keyExists(Vertex v)
-	{
-		return graph.keySet().stream().anyMatch(x -> x.getLabel().equals(v.getLabel()));
-	}
-	
-	private Vertex getKeyAsVertex(Vertex v)
-	{
-		return graph.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null);
-	}
-	
-	/**
-	 * Gets the AdjList associated to the given key
-	 * @param v The Hashmap key
-	 * @return LinkedList<Vertex>
-	 */
-	private LinkedList<Vertex> getAdjListIfExists(Vertex v)
-	{
-		Vertex vc = graph.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null);
-		if (graph.containsKey(vc))
-			return graph.get(vc);
-		
-		return null;
-	}
-	
-	/**
-	 * Checks if a given adjList contains the specified vertex
-	 * @param sourceVertex
-	 * @param targetVertex
-	 * @return true if the AdjList contains the targetVertex otherwise returns false
-	 */
-	private boolean adjListContains(LinkedList<Vertex> adjList, Vertex targetVertex)
-	{
-		if (adjList == null || targetVertex == null)
-			return false;
-		
-		return adjList.stream().anyMatch(x -> x.getLabel().equals(targetVertex.getLabel()));
-	}
-		
-	//END HELPERS
-
 	/**
 	 * Adds the specified vertex to this graph if not already present. More
 	 * formally, adds the specified vertex, <code>v</code>, to this graph if this
@@ -150,7 +100,7 @@ public class DirectedGraphAdjList implements Graph
 	public boolean containsVertex(Vertex v) 
 	{
 		// If the vertex is null or does not exist in the graph, returns false
-		if (v == null || !keyExists(v))
+		if (v == null || !ListStructuresFunctions.keyExists(v, graph))
 			return false;
 		
 		return true;
@@ -185,13 +135,13 @@ public class DirectedGraphAdjList implements Graph
 			return false;
 		
 		//Removes the key (aka the vertex)
-		graph.remove(getKeyAsVertex(v));
+		graph.remove(ListStructuresFunctions.getKeyAsVertex(v, graph));
 		
 		//For each keys, checks if the LinkedList contains the vertex and if it does, deletes it
 		for (Vertex key : graph.keySet())
 		{
-			if (adjListContains(getAdjListIfExists(v), v))
-				(getAdjListIfExists(v)).remove(graph.get(key).stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null));
+			if (ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(v, graph), v))
+				(ListStructuresFunctions.getAdjListIfExists(v, graph)).remove(graph.get(key).stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null));
 		}
 		
 		return true;
@@ -256,8 +206,8 @@ public class DirectedGraphAdjList implements Graph
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (containsVertex(sourceVertex))
 		{
-			if (!adjListContains(getAdjListIfExists(sourceVertex), targetVertex))
-				graph.get(getKeyAsVertex(sourceVertex)).add(targetVertex);
+			if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, graph), targetVertex))
+				graph.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, graph)).add(targetVertex);
 			
 			return new EdgeImpl(sourceVertex, targetVertex, this);
 		}
@@ -287,9 +237,9 @@ public class DirectedGraphAdjList implements Graph
 			return false;
 		
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
-		LinkedList<Vertex> vertices = getAdjListIfExists(sourceVertex);
+		LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceVertex, graph);
 		if (vertices != null && vertices.size() > 0)
-			return adjListContains(vertices, targetVertex);
+			return ListStructuresFunctions.adjListContains(vertices, targetVertex);
 		
 		return false;
 	}
@@ -400,7 +350,7 @@ public class DirectedGraphAdjList implements Graph
 	public int outDegreeOf(Vertex vertex) 
 	{
 		if (isDirected)
-			return getAdjListIfExists(vertex).size();
+			return ListStructuresFunctions.getAdjListIfExists(vertex, graph).size();
 		else
 			throw new UnsupportedOperationException();
 	}
@@ -436,9 +386,9 @@ public class DirectedGraphAdjList implements Graph
 			return null;
 		
 		//Finds the edge with sourceVertex and targetVertex and removes it
-		if (adjListContains(getAdjListIfExists(sourceVertex),targetVertex))
+		if (ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, graph),targetVertex))
 		{
-			if (getAdjListIfExists(sourceVertex).remove(targetVertex))
+			if (ListStructuresFunctions.getAdjListIfExists(sourceVertex, graph).remove(targetVertex))
 				return new EdgeImpl(sourceVertex, targetVertex, this);
 		}
 		
@@ -502,7 +452,7 @@ public class DirectedGraphAdjList implements Graph
 	 * @throws UnsupportedOperationException if the visit cannot be performed on the current graph 
 	 * (e.g., a Dijkstra visit on an unweighted graph).
 	 * 
-	 * @return a GraphSearchResult representing the result of the visit performed.
+	 * @return a GraphSearchtreeult reptreeenting the treeult of the visit performed.
 	 * 
 	 */
 	@Override
@@ -512,7 +462,7 @@ public class DirectedGraphAdjList implements Graph
 		if (graph.keySet().isEmpty())
 			return null;
 		
-		GraphSearchResultImpl res;
+		GraphSearchResultImpl tree;
 		
 		HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
 		//Initializes the visited nodes to 'not visited'
@@ -525,10 +475,7 @@ public class DirectedGraphAdjList implements Graph
 				LinkedList<Vertex> queue = new LinkedList<Vertex>();				
 				//Adds the root to the queue and sets it as gray
 				Vertex root = graph.keySet().stream().findFirst().orElse(null);
-				res = new GraphSearchResultImpl(type, root, this);
-				res.setColor(root, Colors.GREY);
-				res.setDistance(root, 0.0);
-				res.setStartTime(root);
+				tree = new GraphSearchResultImpl(type, root, this);
 				visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(root.getLabel())).findFirst().orElse(null), Colors.GREY);
 				queue.add(root);
 				//TODO: puts the root in the BFS tree
