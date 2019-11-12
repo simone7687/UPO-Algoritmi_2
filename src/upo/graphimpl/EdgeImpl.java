@@ -6,6 +6,7 @@ import java.util.Set;
 import upo.graph.DirectedEdge;
 import upo.graph.Edge;
 import upo.graph.Graph;
+import upo.graph.GraphSearchResult;
 import upo.graph.Vertex;
 
 public class EdgeImpl implements DirectedEdge
@@ -13,8 +14,8 @@ public class EdgeImpl implements DirectedEdge
     private double edgeWeight;
     private Vertex sourceVertex;
     private Vertex targetVertex;
-    private Graph graph;
-
+	private Graph graph;
+	GraphSearchResult tree
     
     //Constructor that initializes vertices, adds the vertices and sets the edge weight value
     public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, double edgeWeight, Graph graph)
@@ -31,7 +32,15 @@ public class EdgeImpl implements DirectedEdge
     	this.sourceVertex = sourceVertex;
     	this.targetVertex = targetVertex;
     	this.graph = graph;
-    }
+	}
+	
+	//Constructor that initializes vertices, adds the vertices
+	public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, GraphSearchResult tree)
+	{
+		this.sourceVertex = sourceVertex;
+		this.targetVertex = targetVertex;
+		this.tree = tree;
+	}
     
     public void setEdgeWeight(double edgeWeight)
     {

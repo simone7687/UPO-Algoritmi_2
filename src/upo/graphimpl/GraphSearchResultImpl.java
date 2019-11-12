@@ -1,7 +1,7 @@
 package upo.graphimpl;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import upo.graph.Edge;
@@ -14,7 +14,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 {
 	private SearchType type;
 	private Vertex source;
-	private HashMap<Vertex, LinkedList<Vertex>> Dag;
+	private LinkedHashMap<Vertex, LinkedList<Vertex>> Dag;
 	private Graph graph;
 
 	public GraphSearchResultImpl(SearchType type, Vertex source, Graph graph)
@@ -56,6 +56,37 @@ public class GraphSearchResultImpl implements GraphSearchResult
 			return false;
 		
 		return true;
+	}
+	
+	public Edge addEdge(Vertex sourceVertex, Vertex targetVertex) 
+	{
+		//If any of the specified vertex are null, throws NullPointerException
+		if (sourceVertex == null || targetVertex == null)
+			throw new NullPointerException("One or more given parameter is null.");
+		
+		//If the graph doesn't contain both the specified vertex, throws IllegalArgumentException
+		if (!containsLeaves(sourceVertex) || !containsLeaves(targetVertex))
+			throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
+		
+		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
+		if (containsLeaves(sourceVertex))
+		{
+			if (!ListStructuresFunctions.adjListContains(getAdjListIfExists(sourceVertex), targetVertex))
+				Dag.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, Dag)).add(targetVertex);
+			
+			return new EdgeImpl(sourceVertex, targetVertex, this);
+		}
+				
+		return null;
+	}
+
+	private LinkedList<Vertex> getAdjListIfExists(Vertex v)
+	{
+		Vertex vc = Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null);
+		if (Dag.containsKey(vc))
+			return Dag.get(vc);
+		
+		return null;
 	}
 	
 	// TODO: java doc
