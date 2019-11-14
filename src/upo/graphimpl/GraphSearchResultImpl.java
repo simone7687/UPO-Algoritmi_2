@@ -3,6 +3,7 @@ package upo.graphimpl;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import upo.graph.Edge;
 import upo.graph.Graph;
@@ -58,6 +59,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		return true;
 	}
 	
+	// TODO: java doc
 	public Edge addEdge(Vertex sourceVertex, Vertex targetVertex) 
 	{
 		//If any of the specified vertex are null, throws NullPointerException
@@ -71,7 +73,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (containsLeaves(sourceVertex))
 		{
-			if (!ListStructuresFunctions.adjListContains(getAdjListIfExists(sourceVertex), targetVertex))
+			if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, Dag), targetVertex))
 				Dag.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, Dag)).add(targetVertex);
 			
 			return new EdgeImpl(sourceVertex, targetVertex, this);
@@ -80,13 +82,19 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		return null;
 	}
 
-	private LinkedList<Vertex> getAdjListIfExists(Vertex v)
+	// TODO: java doc
+	public boolean containsEdge(Vertex sourceVertex, Vertex targetVertex) 
 	{
-		Vertex vc = Dag.keySet().stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null);
-		if (Dag.containsKey(vc))
-			return Dag.get(vc);
+		//Returns false if any of the specified vertex does not exist in the current graph
+		if (!containsLeaves(sourceVertex) || !containsLeaves(targetVertex))
+			return false;
 		
-		return null;
+		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
+		LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceVertex, Dag);
+		if (vertices != null && vertices.size() > 0)
+			return ListStructuresFunctions.adjListContains(vertices, targetVertex);
+		
+		return false;
 	}
 	
 	// TODO: java doc
@@ -147,7 +155,24 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (this.getType() != SearchType.BFS && this.getType() != SearchType.DIJKSTRA)
 			throw new UnsupportedOperationException("This type of visit is not supported.");	
 		
-		//TODO: return lunghezza / peso del percorso più breve tra il vertice sorgente Sorgente e v;
+		if(containsEdge(source, v))
+			return 1;
+		return distance(source, v, 1);
+	}
+	// TODO: java doc
+	private int distance(Vertex current, Vertex find, int currentDistance)
+	{
+		currentDistance++;
+		List<Vertex> neighbors = Dag.get(current);
+		for(Vertex neighbor : neighbors)
+		{
+			if(containsEdge(neighbor, find))
+				return currentDistance;
+			int ren = distance(neighbor, find, currentDistance);
+			if(ren != 0)
+				return ren;
+		}
+		return 0;
 	}
 
 	/**
@@ -197,9 +222,9 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (!graph.containsVertex(v))
 			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 
-		//TODO: Se v non è stato rilevato, questo metodo restituisce -1.
-	
 		//TODO: return Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato scoperto nella visita corrente (ovvero, quando v è diventato grigio).
+
+		return -1;
 	}
 
 	/**
@@ -220,9 +245,9 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (!graph.containsVertex(v))
 			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 		
-		//TODO: Se v non è stato rilevato, questo metodo restituisce -1.
-		
 		//TODO: Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato chiuso nella visita corrente (cioè quando v è diventato nero).
+		
+		return -1;
 	}
 	
 	/**
@@ -243,8 +268,14 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (!graph.containsVertex(v1) || !graph.containsVertex(v2))
 			throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 
-		//TODO: Restituisce il peso del bordo tra v1 e v2 nel risultato della ricerca corrente, se esiste.
-
-		//TODO: In caso contrario, restituisce un'eccezione IllegalArgumentException.
+		if(containsEdge(v1, v2))
+		{
+			//TODO: non sono sicuro che il peso sia uguale sia per graph che per Dag
+			return graph.getEdgeWeight(v1, v2);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Does not exist the edge between v1 and v2");
+		}
 	}
 }
