@@ -23,6 +23,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		this.type = type;
 		this.source = source;
 		this.graph = graph;
+		Dag = new LinkedHashMap<>();;
 	}
 
 	// TODO: java doc
