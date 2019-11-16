@@ -2,10 +2,12 @@ package upo.graphtests;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static upo.graph.SearchType.*;
 
 import org.junit.Test;
 
 import upo.graph.Edge;
+import upo.graph.GraphSearchResult;
 import upo.graphimpl.DirectedGraphAdjList;
 import upo.graphimpl.VertexImpl;
 
@@ -142,7 +144,7 @@ public class DirectedGraphAdjListTest
 		VertexImpl v1 = new VertexImpl("B");
 		graph.addVertex(v1);
 		
-		Edge res = graph.addEdge(v0, v1);
+		Edge res = graph.addEdge(v0, v1);//TODO:
 		assertFalse(graph.containsEdge(new VertexImpl("F"), v0));
 		assertFalse(graph.containsEdge(v0, new VertexImpl("F")));
 
@@ -289,7 +291,27 @@ public class DirectedGraphAdjListTest
 	@Test
 	public void visitTest()
 	{
-		//TODO
+		VertexImpl v0 = new VertexImpl("A");
+		graph.addVertex(v0);
+
+		VertexImpl v1 = new VertexImpl("B");
+		graph.addVertex(v1);
+
+		VertexImpl v2 = new VertexImpl("C");
+		graph.addVertex(v2);
+
+		VertexImpl v3 = new VertexImpl("D");
+		graph.addVertex(v3);
+
+		assertNotNull(graph.addEdge(v0, v1));
+		assertNotNull(graph.addEdge(v0, v2));
+		assertNotNull(graph.addEdge(v1, v2));
+		assertNotNull(graph.addEdge(v1, v3));
+		assertNotNull(graph.addEdge(v2, v3));
+
+		GraphSearchResult treeBFS = graph.visit(BFS);
+		assertEquals(2.0, treeBFS.getDistance(v3), 0);
+		//TODO:...
 	}
 	
 	@Test

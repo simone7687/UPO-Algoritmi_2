@@ -476,10 +476,10 @@ public class DirectedGraphAdjList implements Graph
 				//Adds the root to the queue and sets it as gray
 				Vertex root = graph.keySet().stream().findFirst().orElse(null);
 				tree = new GraphSearchResultImpl(type, root, this);
-				visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(root.getLabel())).findFirst().orElse(null), Colors.GREY);
+				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
 				queue.add(root);
-				//TODO: puts the root in the BFS tree
-				
+				//Adds the root in the BFS tree
+				tree.addLeaves(root);
 				//While the queue is not empty
 				while (!queue.isEmpty())
 				{
@@ -487,24 +487,23 @@ public class DirectedGraphAdjList implements Graph
 					Vertex current = queue.element();
 					//Gets the vertices connected to it
 					List<Vertex> neighbors = graph.get(current);
-					//TODO: put the vertices connected to it in the queue and in the BFS tree if they are gray
+					//Add the vertices connected to it in the queue and in the BFS tree if they are white
 			        for (Vertex neighbor : neighbors) 
 			        {
 			        	//If the node has not been visited, adds it to the queue
 			        	if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			        	{
 					        queue.add(neighbor);
-							visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(neighbor.getLabel())).findFirst().orElse(null), Colors.GREY);
+							visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(neighbor, graph), Colors.GREY);
+							tree.addLeaves(neighbor);
+							tree.addEdge(current, neighbor);
 			        	}
 					}
 					// delete the first of the queue end set it black
-			        queue.remove();
-					// visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(neighbor.getLabel())).findFirst().orElse(null), Colors.BLACK);
+			        queue.remove(0);
+					visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
 				}
-				
-				//TODO: return stuff
-				//return BFS tree
-				return null;
+				return tree;
 			case DFS:
 				throw new UnsupportedOperationException();
 			case DFS_TOT:

@@ -23,7 +23,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		this.type = type;
 		this.source = source;
 		this.graph = graph;
-		Dag = new LinkedHashMap<>();;
+		Dag = new LinkedHashMap<>();
 	}
 
 	// TODO: java doc
@@ -156,6 +156,8 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (this.getType() != SearchType.BFS && this.getType() != SearchType.DIJKSTRA)
 			throw new UnsupportedOperationException("This type of visit is not supported.");	
 		
+		if(source.equals(v))
+			return 0;
 		if(containsEdge(source, v))
 			return 1;
 		return distance(source, v, 1);
