@@ -311,6 +311,8 @@ public class DirectedGraphAdjListTest
 
 		GraphSearchResult treeBFS = graph.visit(BFS);
 		assertEquals(2.0, treeBFS.getDistance(v3), 0);
+
+		GraphSearchResult treeDFS_TOT = graph.visit(DFS_TOT);
 		//TODO:...
 	}
 	

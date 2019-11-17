@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 import java.lang.UnsupportedOperationException;
 import upo.graph.Edge;
@@ -469,12 +468,13 @@ public class DirectedGraphAdjList implements Graph
 		for (Vertex v : graph.keySet())
 			visitedNodes.put(v, Colors.WHITE);
 		
+		Vertex root = graph.keySet().stream().findFirst().orElse(null);
+		
 		switch (type)
 		{
 			case BFS:
 				LinkedList<Vertex> queue = new LinkedList<Vertex>();				
 				//Adds the root to the queue and sets it as gray
-				Vertex root = graph.keySet().stream().findFirst().orElse(null);
 				tree = new GraphSearchResultImpl(type, root, this);
 				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
 				queue.add(root);
@@ -505,46 +505,38 @@ public class DirectedGraphAdjList implements Graph
 				}
 				return tree;
 			case DFS:
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException();	// bo
 			case DFS_TOT:
-				//???????????????????????????
-				Stack<Vertex> S = new Stack<Vertex>();
 				//Adds the root to the queue and sets it as gray
-				Vertex r = graph.keySet().stream().findFirst().orElse(null);
-				visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(r.getLabel())).findFirst().orElse(null), Colors.GREY);
-				S.add(r);
-				
-				//While the stack is not empty
-				while (!S.isEmpty())
-				{
-					//Gets the first element from the queue
-					Vertex current = S.peek();
-					//Gets the vertices connected to it
-			        List<Vertex> neighbors = graph.get(current);
-			        
-			        for (Vertex neighbor : neighbors) 
-			        {
-			        	//If the node has not been visited, adds it to the stack
-			        	if (visitedNodes.keySet().stream().noneMatch(x -> x.getLabel().equals(neighbor.getLabel())))
-			        	{
-					        S.push(neighbor);
-							visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(neighbor.getLabel())).findFirst().orElse(null), Colors.GREY);
-			        	}
-			        	else
-			        	{
-			        		S.pop();
-							visitedNodes.put(graph.keySet().stream().filter(x -> x.getLabel().equals(neighbor.getLabel())).findFirst().orElse(null), Colors.BLACK);
-			        	}
-			        }
-				}
-				
-				//TODO: return stuff
-				return null;			
-				case DIJKSTRA:
-				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");
+				tree = new GraphSearchResultImpl(type, root, this);
+				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
+				//Adds the root in the BFS tree
+				tree.addLeaves(root);
+				DFSric(tree, visitedNodes, root);
+				return tree;
+			case DIJKSTRA:
+				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// bo
 			default:
 				return null;
 		}
+	}
+	void DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
+	{
+		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
+		//Gets the vertices connected to it
+		List<Vertex> neighbors = graph.get(current);
+		//Add the vertices connected to it in the queue and in the BFS tree if they are white
+		for (Vertex neighbor : neighbors)
+		{
+			//If the node has not been visited, adds it to the queue
+			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+			{
+				tree.addLeaves(neighbor);
+				tree.addEdge(current, neighbor);
+				DFSric(tree, visitedNodes, neighbor);
+			}
+		} 
+		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
 	}
 
 	/**
