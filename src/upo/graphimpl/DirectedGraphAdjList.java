@@ -469,13 +469,13 @@ public class DirectedGraphAdjList implements Graph
 			visitedNodes.put(v, Colors.WHITE);
 		
 		Vertex root = graph.keySet().stream().findFirst().orElse(null);
+		tree = new GraphSearchResultImpl(type, root, this);
 		
 		switch (type)
 		{
 			case BFS:
 				LinkedList<Vertex> queue = new LinkedList<Vertex>();				
 				//Adds the root to the queue and sets it as gray
-				tree = new GraphSearchResultImpl(type, root, this);
 				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
 				queue.add(root);
 				//Adds the root in the BFS tree
@@ -508,7 +508,6 @@ public class DirectedGraphAdjList implements Graph
 				throw new UnsupportedOperationException();	// TODO: non so cosa si deve fare
 			case DFS_TOT:
 				//Adds the root to the queue and sets it as gray
-				tree = new GraphSearchResultImpl(type, root, this);
 				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
 				//Adds the root in the BFS tree
 				tree.addLeaves(root);
@@ -595,6 +594,7 @@ public class DirectedGraphAdjList implements Graph
 		return false;
 	}
 	
+	// TODO: rivedere
 	List<Vertex> res;
 	private void visitNode(HashMap<Vertex, Colors> visitedNodes, Vertex v)
 	{
