@@ -15,7 +15,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 {
 	private SearchType type;
 	private Vertex source;
-	private LinkedHashMap<Vertex, LinkedList<Vertex>> Dag;
+	private LinkedHashMap<Vertex, LinkedList<Vertex>> tree;
 	private Graph graph;
 
 	public GraphSearchResultImpl(SearchType type, Vertex source, Graph graph)
@@ -23,7 +23,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		this.type = type;
 		this.source = source;
 		this.graph = graph;
-		Dag = new LinkedHashMap<>();
+		tree = new LinkedHashMap<>();
 	}
 
 	// TODO: java doc
@@ -39,7 +39,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		else
 		{
 			//Adds the vertex and initializes an empty list
-			Dag.put(v, new LinkedList<Vertex>());
+			tree.put(v, new LinkedList<Vertex>());
 			return true;
 		}
 	}
@@ -47,7 +47,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	// TODO: java doc
 	private boolean keyExists(Vertex v)
 	{
-		return Dag.keySet().stream().anyMatch(x -> x.getLabel().equals(v.getLabel()));
+		return tree.keySet().stream().anyMatch(x -> x.getLabel().equals(v.getLabel()));
 	}
 
 	// TODO: java doc
@@ -74,8 +74,8 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (containsLeaves(sourceVertex))
 		{
-			if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, Dag), targetVertex))
-				Dag.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, Dag)).add(targetVertex);
+			if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, tree), targetVertex))
+				tree.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, tree)).add(targetVertex);
 			
 			return new EdgeImpl(sourceVertex, targetVertex, this);
 		}
@@ -91,7 +91,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 			return false;
 		
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
-		LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceVertex, Dag);
+		LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceVertex, tree);
 		if (vertices != null && vertices.size() > 0)
 			return ListStructuresFunctions.adjListContains(vertices, targetVertex);
 		
@@ -166,7 +166,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 	private int distance(Vertex current, Vertex find, int currentDistance)
 	{
 		currentDistance++;
-		List<Vertex> neighbors = Dag.get(current);
+		List<Vertex> neighbors = tree.get(current);
 		for(Vertex neighbor : neighbors)
 		{
 			if(containsEdge(neighbor, find))
@@ -196,9 +196,9 @@ public class GraphSearchResultImpl implements GraphSearchResult
 		if (source == v)
 			return null;
 
-		for (Vertex x : Dag.keySet())
+		for (Vertex x : tree.keySet())
 		{
-			if(Dag.get(x).getFirst() == v);
+			if(tree.get(x).getFirst() == v);
 			{
 				return x;
 			}
@@ -273,7 +273,7 @@ public class GraphSearchResultImpl implements GraphSearchResult
 
 		if(containsEdge(v1, v2))
 		{
-			//TODO: non sono sicuro che il peso sia uguale sia per graph che per Dag
+			//TODO: non sono sicuro che il peso sia uguale sia per graph che per tree
 			return graph.getEdgeWeight(v1, v2);
 		}
 		else
