@@ -505,7 +505,7 @@ public class DirectedGraphAdjList implements Graph
 				}
 				return tree;
 			case DFS:
-				throw new UnsupportedOperationException();	// bo
+				throw new UnsupportedOperationException();	// TODO: non so cosa si deve fare
 			case DFS_TOT:
 				//Adds the root to the queue and sets it as gray
 				tree = new GraphSearchResultImpl(type, root, this);
@@ -515,7 +515,7 @@ public class DirectedGraphAdjList implements Graph
 				DFSric(tree, visitedNodes, root);
 				return tree;
 			case DIJKSTRA:
-				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// bo
+				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// TODO: non sono sicuro che non si veve implementare per questo grafico
 			default:
 				return null;
 		}
