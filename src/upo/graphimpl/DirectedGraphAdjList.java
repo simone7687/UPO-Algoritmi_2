@@ -511,15 +511,15 @@ public class DirectedGraphAdjList implements Graph
 				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
 				//Adds the root in the BFS tree
 				tree.addLeaves(root);
-				DFSric(tree, visitedNodes, root);
-				return tree;
+				return DFSric(tree, visitedNodes, root);
 			case DIJKSTRA:
 				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// TODO: non sono sicuro che non si veve implementare per questo grafico
 			default:
 				return null;
 		}
 	}
-	void DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
+	
+	GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
 	{
 		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
 		//Gets the vertices connected to it
@@ -532,10 +532,11 @@ public class DirectedGraphAdjList implements Graph
 			{
 				tree.addLeaves(neighbor);
 				tree.addEdge(current, neighbor);
-				DFSric(tree, visitedNodes, neighbor);
+				tree = DFSric(tree, visitedNodes, neighbor);
 			}
 		} 
 		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
+		return tree;
 	}
 
 	/**
