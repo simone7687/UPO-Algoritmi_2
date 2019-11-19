@@ -518,8 +518,7 @@ public class DirectedGraphAdjList implements Graph
 				return null;
 		}
 	}
-	
-	GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
+	private GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
 	{
 		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
 		//Gets the vertices connected to it
