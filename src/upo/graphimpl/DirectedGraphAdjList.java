@@ -521,14 +521,14 @@ public class DirectedGraphAdjList implements Graph
 				setColorVertextVisitedNodes(root, Colors.GREY);
 				//Adds the root in the BFS tree
 				tree.addLeaves(root);
-				return DFSric(tree, root);
+				return DFSrecursive(tree, root);
 			case DIJKSTRA:
 				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// TODO: non sono sicuro che non si veve implementare per questo grafico
 			default:
 				return null;
 		}
 	}
-	private GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, Vertex current)
+	private GraphSearchResultImpl DFSrecursive(GraphSearchResultImpl tree, Vertex current)
 	{
 		setColorVertextVisitedNodes(current, Colors.GREY);
 		//Gets the vertices connected to it
@@ -541,7 +541,7 @@ public class DirectedGraphAdjList implements Graph
 			{
 				tree.addLeaves(neighbor);
 				tree.addEdge(current, neighbor);
-				tree = DFSric(tree, neighbor);
+				tree = DFSrecursive(tree, neighbor);
 			}
 		}
 		setColorVertextVisitedNodes(current, Colors.BLACK);
@@ -622,9 +622,9 @@ public class DirectedGraphAdjList implements Graph
 		
 		setNotVisitedNodes();
 		
-		return topologicalSortric(root, topologicalSortVertexs, 0);
+		return topologicalSortRecursive(root, topologicalSortVertexs, 0);
 	}
-	private Vertex[] topologicalSortric(Vertex current, Vertex[] topologicalSortVertexs, int count)
+	private Vertex[] topologicalSortRecursive(Vertex current, Vertex[] topologicalSortVertexs, int count)
 	{
 		topologicalSortVertexs[count] = current;
 		setColorVertextVisitedNodes(current, Colors.GREY);
@@ -636,7 +636,7 @@ public class DirectedGraphAdjList implements Graph
 			//If the node has not been visited, adds it to the queue
 			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
-				topologicalSortVertexs = topologicalSortric(neighbor, topologicalSortVertexs, count);
+				topologicalSortVertexs = topologicalSortRecursive(neighbor, topologicalSortVertexs, count);
 			}
 		}
 		setColorVertextVisitedNodes(current, Colors.BLACK);
