@@ -523,7 +523,7 @@ public class DirectedGraphAdjList implements Graph
 		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
-		//Add the vertices connected to it in the queue and in the BFS tree if they are white
+		//Add the vertices connected to it in the queue and in the DFS tree if they are white
 		for (Vertex neighbor : neighbors)
 		{
 			//If the node has not been visited, adds it to the queue
