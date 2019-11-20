@@ -30,6 +30,7 @@ import upo.graph.Vertex;
 public class DirectedGraphAdjList implements Graph 
 {
 	private LinkedHashMap<Vertex, LinkedList<Vertex>> graph;
+	private HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
 	private final boolean isDirected = true;
 	
 	/**
@@ -40,6 +41,19 @@ public class DirectedGraphAdjList implements Graph
 	public DirectedGraphAdjList()
 	{
 		graph = new LinkedHashMap<>();
+	}
+	
+	//TODO: javadoc: Initializes the visited nodes to 'not visited'
+	private void setNotVisitedNodes()
+	{
+		visitedNodes.clear();
+		for (Vertex v : graph.keySet())
+		visitedNodes.put(v, Colors.WHITE);
+	}
+	//TODO: javadoc
+	private void setColorVertextVisitedNodes(Vertex v, Colors color)
+	{
+		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(v, graph), color);
 	}
 	
 	@Override
@@ -462,10 +476,7 @@ public class DirectedGraphAdjList implements Graph
 		
 		GraphSearchResultImpl tree;
 		
-		HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
-		//Initializes the visited nodes to 'not visited'
-		for (Vertex v : graph.keySet())
-			visitedNodes.put(v, Colors.WHITE);
+		setNotVisitedNodes();
 		
 		Vertex root = graph.keySet().stream().findFirst().orElse(null);
 		tree = new GraphSearchResultImpl(type, root, this);
@@ -475,7 +486,7 @@ public class DirectedGraphAdjList implements Graph
 			case BFS:
 				LinkedList<Vertex> queue = new LinkedList<Vertex>();				
 				//Adds the root to the queue and sets it as gray
-				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
+				setColorVertextVisitedNodes(root, Colors.GREY);
 				queue.add(root);
 				//Adds the root in the BFS tree
 				tree.addLeaves(root);
@@ -492,34 +503,34 @@ public class DirectedGraphAdjList implements Graph
 			        	//If the node has not been visited, adds it to the queue
 			        	if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			        	{
-					        queue.add(neighbor);
-							visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(neighbor, graph), Colors.GREY);
+							queue.add(neighbor);
+							setColorVertextVisitedNodes(neighbor, Colors.GREY);
 							tree.addLeaves(neighbor);
 							tree.addEdge(current, neighbor);
 			        	}
 					}
 					// delete the first of the queue end set it black
-			        queue.remove(0);
-					visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
+					queue.remove(0);
+					setColorVertextVisitedNodes(current, Colors.BLACK);
 				}
 				return tree;
 			case DFS:
 				throw new UnsupportedOperationException();	// TODO: non so cosa si deve fare
 			case DFS_TOT:
 				//Adds the root to the queue and sets it as gray
-				visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(root, graph), Colors.GREY);
+				setColorVertextVisitedNodes(root, Colors.GREY);
 				//Adds the root in the BFS tree
 				tree.addLeaves(root);
-				return DFSric(tree, visitedNodes, root);
+				return DFSric(tree, root);
 			case DIJKSTRA:
 				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// TODO: non sono sicuro che non si veve implementare per questo grafico
 			default:
 				return null;
 		}
 	}
-	private GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, HashMap<Vertex, Colors> visitedNodes, Vertex current)
+	private GraphSearchResultImpl DFSric(GraphSearchResultImpl tree, Vertex current)
 	{
-		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
+		setColorVertextVisitedNodes(current, Colors.GREY);
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
 		//Add the vertices connected to it in the queue and in the DFS tree if they are white
@@ -530,10 +541,10 @@ public class DirectedGraphAdjList implements Graph
 			{
 				tree.addLeaves(neighbor);
 				tree.addEdge(current, neighbor);
-				tree = DFSric(tree, visitedNodes, neighbor);
+				tree = DFSric(tree, neighbor);
 			}
-		} 
-		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
+		}
+		setColorVertextVisitedNodes(current, Colors.BLACK);
 		return tree;
 	}
 
@@ -608,17 +619,15 @@ public class DirectedGraphAdjList implements Graph
 		
 		Vertex[] topologicalSortVertexs = new Vertex[ListStructuresFunctions.getVerticesNumber(graph)];
 		Vertex root = graph.keySet().stream().findFirst().orElse(null);
-		HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
-		//Initializes the visited nodes to 'not visited'
-		for (Vertex v : graph.keySet())
-			visitedNodes.put(v, Colors.WHITE);
 		
-		return topologicalSortric(visitedNodes, root, topologicalSortVertexs, 0);
+		setNotVisitedNodes();
+		
+		return topologicalSortric(root, topologicalSortVertexs, 0);
 	}
-	private Vertex[] topologicalSortric(HashMap<Vertex, Colors> visitedNodes, Vertex current, Vertex[] topologicalSortVertexs, int count)
+	private Vertex[] topologicalSortric(Vertex current, Vertex[] topologicalSortVertexs, int count)
 	{
 		topologicalSortVertexs[count] = current;
-		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
+		setColorVertextVisitedNodes(current, Colors.GREY);
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
 		//Add the vertices connected to it in the queue and in the topologicalSort array if they are white
@@ -627,10 +636,10 @@ public class DirectedGraphAdjList implements Graph
 			//If the node has not been visited, adds it to the queue
 			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
-				topologicalSortVertexs = topologicalSortric(visitedNodes, neighbor, topologicalSortVertexs, count);
+				topologicalSortVertexs = topologicalSortric(neighbor, topologicalSortVertexs, count);
 			}
 		}
-		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
+		setColorVertextVisitedNodes(current, Colors.BLACK);
 		return topologicalSortVertexs;
 	}
 
