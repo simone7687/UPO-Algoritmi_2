@@ -54,7 +54,8 @@ public class ListStructuresFunctions
 
 	static int getVerticesNumber (LinkedHashMap<Vertex, LinkedList<Vertex>> graph)
 	{
-		int count = 3;
+		int count = 0;
+		//TODO: ...
 		return count;
 	}
 }
