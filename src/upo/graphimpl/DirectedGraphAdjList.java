@@ -664,15 +664,19 @@ public class DirectedGraphAdjList implements Graph
 		
 		for (Vertex current : visitedNodes.keySet())
 			if(!visitedNodes.get(current).equals(Colors.BLACK))
+			{
 				currentComponents = stronglyConnectedComponentsRecursive(current, current, currentComponents);
 				if (currentComponents.isEmpty())
 					throw new UnsupportedOperationException("The current graph is not directed");
 				for (Vertex v : currentComponents)
 					setColorVertextVisitedNodes(v, Colors.BLACK);
 				for (Vertex v : visitedNodes.keySet())
+				{
 					if(visitedNodes.get(v).equals(Colors.GREY))
 						setColorVertextVisitedNodes(v, Colors.WHITE);
+				}
 				components.add(currentComponents);
+			}
 		return components;
 	}
 	private Collection<Vertex> stronglyConnectedComponentsRecursive(Vertex current, Vertex find, Collection<Vertex> components)
