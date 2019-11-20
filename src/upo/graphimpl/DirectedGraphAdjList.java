@@ -667,7 +667,6 @@ public class DirectedGraphAdjList implements Graph
 	private Collection<Collection<Vertex>> stronglyConnectedComponentsRecursive(Vertex current, Collection<Collection<Vertex>> components)
 	{
 		setColorVertextVisitedNodes(current, Colors.GREY);
-		//components
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
 		for (Vertex neighbor : neighbors)
