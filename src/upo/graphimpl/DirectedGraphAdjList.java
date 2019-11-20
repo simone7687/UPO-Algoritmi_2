@@ -594,22 +594,6 @@ public class DirectedGraphAdjList implements Graph
 		return false;
 	}
 	
-	// TODO: rivedere
-	List<Vertex> res;
-	private void visitNode(HashMap<Vertex, Colors> visitedNodes, Vertex v)
-	{
-		res = new ArrayList<Vertex>();
-		if (visitedNodes.get(v) == Colors.WHITE)
-		{
-			visitedNodes.put(v, Colors.GREY);
-			for (Vertex vtx : graph.get(v))
-			{
-				visitNode(visitedNodes, vtx);
-			}
-			res.add(v);
-		}
-	}
-
 	/**
 	 * If the current graph is a DAG, it returns a topological sort of this graph. 
 	 * 
