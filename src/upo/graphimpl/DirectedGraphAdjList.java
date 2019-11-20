@@ -658,33 +658,43 @@ public class DirectedGraphAdjList implements Graph
 			throw new UnsupportedOperationException("The current graph is not directed.");
 		
 		Collection<Collection<Vertex>> components = new LinkedList<Collection<Vertex>>();
-		Vertex root = graph.keySet().stream().findFirst().orElse(null);
+		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
 		
 		setNotVisitedNodes();
 		
-		return stronglyConnectedComponentsRecursive(root, components);
+		for (Vertex current : visitedNodes.keySet())
+			if(!visitedNodes.get(current).equals(Colors.BLACK))
+				currentComponents = stronglyConnectedComponentsRecursive(current, current, currentComponents);
+				if (currentComponents.isEmpty())
+					throw new UnsupportedOperationException("The current graph is not directed");
+				for (Vertex v : currentComponents)
+					setColorVertextVisitedNodes(v, Colors.BLACK);
+				for (Vertex v : visitedNodes.keySet())
+					if(visitedNodes.get(v).equals(Colors.GREY))
+						setColorVertextVisitedNodes(v, Colors.WHITE);
+				components.add(currentComponents);
+		return components;
 	}
-	private Collection<Collection<Vertex>> stronglyConnectedComponentsRecursive(Vertex current, Collection<Collection<Vertex>> components)
+	private Collection<Vertex> stronglyConnectedComponentsRecursive(Vertex current, Vertex find, Collection<Vertex> components)
 	{
+		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
 		setColorVertextVisitedNodes(current, Colors.GREY);
+		currentComponents.add(current);
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
 		for (Vertex neighbor : neighbors)
 		{
-			//If the node has not been visited, adds it to the queue
 			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
-				if (containsEdge(neighbor, current))
-				{
-					Collection<Vertex> currentComponents = new LinkedList<Vertex>();
-					currentComponents.add(current);
-					currentComponents.add(neighbor);
-					components.add(currentComponents);
-				}
-				components = stronglyConnectedComponentsRecursive(neighbor, components);
+				if (neighbor.equals(find) && currentComponents.size() < components.size())
+					components = currentComponents;
+				else
+					components = stronglyConnectedComponentsRecursive(neighbor, find, components);
 			}
+			else
+				return null;
 		}
-		return components;
+		return currentComponents;
 	}
 
 	/**
@@ -700,8 +710,10 @@ public class DirectedGraphAdjList implements Graph
 	{
 		if (!isDirected)
 			throw new UnsupportedOperationException("The current graoh is not directed.");
-		// TODO
+
+		Collection<Collection<Vertex>> components = stronglyConnectedComponents();
+		String ren = new String();
+		ren = 
 		return null;
 	}
-
 }
