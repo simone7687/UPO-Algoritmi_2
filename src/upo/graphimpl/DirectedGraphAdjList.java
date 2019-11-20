@@ -717,7 +717,19 @@ public class DirectedGraphAdjList implements Graph
 
 		Collection<Collection<Vertex>> components = stronglyConnectedComponents();
 		String ren = new String();
-		ren = 
-		return null;
+
+		ren += "{";
+		for (Collection<Vertex> collectionV : components)
+		{
+			ren += "{";
+			for (Vertex v : collectionV)
+			{
+				ren += v.getLabel() + ",";
+			}
+			ren += "},";
+		}
+		ren += "}";
+
+		return ren;
 	}
 }
