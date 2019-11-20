@@ -623,25 +623,32 @@ public class DirectedGraphAdjList implements Graph
 		if (!isDAG())
 			throw new UnsupportedOperationException("The current graph is not a DAG.");
 		
+		Vertex[] topologicalSortVertexs = new Vertex[ListStructuresFunctions.getVerticesNumber(graph)];
+		Vertex root = graph.keySet().stream().findFirst().orElse(null);
 		HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
 		//Initializes the visited nodes to 'not visited'
 		for (Vertex v : graph.keySet())
 			visitedNodes.put(v, Colors.WHITE);
 		
-		HashMap<Vertex, Integer> inDegreeVertices = new HashMap<>();
-		for (Vertex v : graph.keySet())
-			inDegreeVertices.put(v, inDegreeOf(v));
-		
-		//Creates a queue of all vertices with inDegree of 0
-		Queue<Vertex> zv = new LinkedList<Vertex>();
-		for (Vertex v : inDegreeVertices.keySet())
-			if (inDegreeVertices.get(v).equals(0))
-				zv.add(v);
-		
-		for (Vertex v : zv)
-			visitNode(visitedNodes, v);
-		
-		return res.toArray(new Vertex[res.size()]);
+		return topologicalSortric(visitedNodes, root, topologicalSortVertexs, 0);
+	}
+	private Vertex[] topologicalSortric(HashMap<Vertex, Colors> visitedNodes, Vertex current, Vertex[] topologicalSortVertexs, int count)
+	{
+		topologicalSortVertexs[count] = current;
+		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.GREY);
+		//Gets the vertices connected to it
+		List<Vertex> neighbors = graph.get(current);
+		//Add the vertices connected to it in the queue and in the topologicalSort array if they are white
+		for (Vertex neighbor : neighbors)
+		{
+			//If the node has not been visited, adds it to the queue
+			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+			{
+				topologicalSortVertexs = topologicalSortric(visitedNodes, neighbor, topologicalSortVertexs, count);
+			}
+		}
+		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(current, graph), Colors.BLACK);
+		return topologicalSortVertexs;
 	}
 
 	/**
