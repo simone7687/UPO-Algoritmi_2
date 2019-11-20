@@ -657,17 +657,17 @@ public class DirectedGraphAdjList implements Graph
 		if (!isDirected)
 			throw new UnsupportedOperationException("The current graph is not directed.");
 		
-		Collection<Collection<Vertex>> sss = new Collection<Collection<Vertex>>();
+		Collection<Collection<Vertex>> components = new LinkedList<Collection<Vertex>>();
 		Vertex root = graph.keySet().stream().findFirst().orElse(null);
 		
 		setNotVisitedNodes();
 		
-		return stronglyConnectedComponentsRecursive(root, sss);
+		return stronglyConnectedComponentsRecursive(root, components);
 	}
-	private Collection<Collection<Vertex>> stronglyConnectedComponentsRecursive(Vertex current, Collection<Collection<Vertex>> sss)
+	private Collection<Collection<Vertex>> stronglyConnectedComponentsRecursive(Vertex current, Collection<Collection<Vertex>> components)
 	{
 		setColorVertextVisitedNodes(current, Colors.GREY);
-		//sss
+		//components
 		//Gets the vertices connected to it
 		List<Vertex> neighbors = graph.get(current);
 		for (Vertex neighbor : neighbors)
@@ -676,11 +676,16 @@ public class DirectedGraphAdjList implements Graph
 			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
 				if (containsEdge(neighbor, current))
-					sss.add((current, neighbor));
-				sss = stronglyConnectedComponentsRecursive(neighbor, sss);
-			}	
+				{
+					Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+					currentComponents.add(current);
+					currentComponents.add(neighbor);
+					components.add(currentComponents);
+				}
+				components = stronglyConnectedComponentsRecursive(neighbor, components);
+			}
 		}
-		return sss;
+		return components;
 	}
 
 	/**
