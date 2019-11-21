@@ -660,23 +660,22 @@ public class DirectedGraphAdjList implements Graph
 		
 		Collection<Collection<Vertex>> components = new LinkedList<Collection<Vertex>>();
 		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+		HashMap<Vertex, Colors> visitedNodes2 = new HashMap<>();
 		
+		for (Vertex v : graph.keySet())
+			visitedNodes2.put(v, Colors.WHITE);
 		setNotVisitedNodes();
 		
-		for (Vertex current : visitedNodes.keySet())
-			if(!visitedNodes.get(current).equals(Colors.BLACK))
+		for (Vertex current : graph.keySet())
+			if(!visitedNodes2.get(current).equals(Colors.BLACK))
 			{
 				currentComponents = stronglyConnectedComponentsRecursive(current, current, currentComponents);
 				if (currentComponents.isEmpty())
 					throw new UnsupportedOperationException("The current graph is not directed");
 				for (Vertex v : currentComponents)
-					setColorVertextVisitedNodes(v, Colors.BLACK);
-				for (Vertex v : visitedNodes.keySet())
-				{
-					if(visitedNodes.get(v).equals(Colors.GREY))
-						setColorVertextVisitedNodes(v, Colors.WHITE);
-				}
+					visitedNodes2.put(ListStructuresFunctions.getKeyAsVertex(v, graph), Colors.BLACK);
 				components.add(currentComponents);
+				setNotVisitedNodes();
 			}
 		return components;
 	}
