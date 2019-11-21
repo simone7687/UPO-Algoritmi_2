@@ -386,14 +386,23 @@ public class DirectedGraphAdjListTest
 	}
 	
 	@Test
-	public void stronglyConnectedComponentsTest()
-	{
-		//TODO
-	}
-	
-	@Test
 	public void toStringSCCTest()
 	{
-		//TODO
+		VertexImpl v0 = new VertexImpl("A");
+		graph.addVertex(v0);
+		
+		VertexImpl v1 = new VertexImpl("B");
+		graph.addVertex(v1);
+		
+		VertexImpl v2 = new VertexImpl("C");
+		graph.addVertex(v2);
+
+		assertNotNull(graph.addEdge(v0, v1));
+		assertNotNull(graph.addEdge(v1, v2));
+		assertNotNull(graph.addEdge(v2, v0));
+
+		assertNotNull(graph.stronglyConnectedComponents());
+
+		assertEquals("{{A,B,C}}", graph.toStringSCC());
 	}
 }
