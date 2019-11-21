@@ -683,22 +683,19 @@ public class DirectedGraphAdjList implements Graph
 	{
 		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
 		setColorVertextVisitedNodes(current, Colors.GREY);
+		currentComponents.addAll(components);
 		currentComponents.add(current);
 		//Gets the vertices connected to it
-		List<Vertex> neighbors = graph.get(current);
-		for (Vertex neighbor : neighbors)
+		for (Vertex neighbor : graph.get(current))
 		{
-			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+			if (neighbor.equals(find) && currentComponents.size() < components.size())
+				components = currentComponents;
+			else if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
-				if (neighbor.equals(find) && currentComponents.size() < components.size())
-					components = currentComponents;
-				else
-					components = stronglyConnectedComponentsRecursive(neighbor, find, components);
+				currentComponents = stronglyConnectedComponentsRecursive(neighbor, find, currentComponents);
 			}
-			else
-				return null;
 		}
-		return currentComponents;
+		return components;
 	}
 
 	/**
