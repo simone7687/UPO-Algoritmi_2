@@ -41,6 +41,7 @@ public class DirectedGraphAdjList implements Graph
 	public DirectedGraphAdjList()
 	{
 		graph = new LinkedHashMap<>();
+		setNotVisitedNodes();
 	}
 	
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
@@ -48,7 +49,7 @@ public class DirectedGraphAdjList implements Graph
 	{
 		visitedNodes.clear();
 		for (Vertex v : graph.keySet())
-		visitedNodes.put(v, Colors.WHITE);
+			visitedNodes.put(v, Colors.WHITE);
 	}
 	//TODO: javadoc
 	private void setColorVertextVisitedNodes(Vertex v, Colors color)
