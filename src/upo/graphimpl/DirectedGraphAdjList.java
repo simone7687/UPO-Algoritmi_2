@@ -662,37 +662,52 @@ public class DirectedGraphAdjList implements Graph
 		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
 		HashMap<Vertex, Colors> visitedNodes2 = new HashMap<>();
 		
-		for (Vertex v : graph.keySet())
-			visitedNodes2.put(v, Colors.WHITE);
 		setNotVisitedNodes();
+		visitedNodes2.putAll(visitedNodes);
 		
 		for (Vertex current : graph.keySet())
+		{
 			if(!visitedNodes2.get(current).equals(Colors.BLACK))
 			{
 				currentComponents = stronglyConnectedComponentsRecursive(current, current, currentComponents);
-				if (currentComponents.isEmpty())
-					throw new UnsupportedOperationException("The current graph is not directed");
-				for (Vertex v : currentComponents)
-					visitedNodes2.put(ListStructuresFunctions.getKeyAsVertex(v, graph), Colors.BLACK);
-				components.add(currentComponents);
-				setNotVisitedNodes();
+				if (!currentComponents.isEmpty())
+				{
+					for (Vertex v : currentComponents)
+						visitedNodes2.put(ListStructuresFunctions.getKeyAsVertex(v, graph), Colors.BLACK);
+					components.add(currentComponents);
+				}
+				visitedNodes.clear();
+				visitedNodes.putAll(visitedNodes2);
 			}
+		}
 		return components;
 	}
-	private Collection<Vertex> stronglyConnectedComponentsRecursive(Vertex current, Vertex find, Collection<Vertex> components)
+	private Collection<Vertex> stronglyConnectedComponentsRecursive(Vertex current, Vertex find, Collection<Vertex> components)	//TODO: errore
 	{
 		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
 		setColorVertextVisitedNodes(current, Colors.GREY);
 		currentComponents.addAll(components);
 		currentComponents.add(current);
 		//Gets the vertices connected to it
 		for (Vertex neighbor : graph.get(current))
 		{
-			if (neighbor.equals(find) && currentComponents.size() < components.size())
-				components = currentComponents;
+			if (neighbor.equals(find))
+			{
+				if (currentComponents.size() < components.size() || components.isEmpty())
+				{
+					components.clear();
+					components.addAll(currentComponents);
+				}
+			}
 			else if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			{
-				currentComponents = stronglyConnectedComponentsRecursive(neighbor, find, currentComponents);
+				neighborComponents = stronglyConnectedComponentsRecursive(neighbor, find, currentComponents);
+				if (!neighborComponents.isEmpty() && (neighborComponents.size() < components.size() || components.isEmpty()))
+				{
+					components.clear();
+					components.addAll(neighborComponents);
+				}
 			}
 		}
 		return components;
