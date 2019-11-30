@@ -47,6 +47,22 @@ public class DirectedGraphAdjMatr implements Graph
 		// TODO
 	}
 
+	//TODO: javadoc
+	private int findVertex(Vertex v)
+	{
+		// If the vertex is null or does not exist in the graph, returns false
+		if (v == null)
+			return 0;
+		for (int i=0; i<maxNVertex; i++)
+		{
+			if (graph[i][0] == v)
+			{
+				return i+1;
+			}
+		}
+		return 0;
+	}
+
 	@Override
 	public Iterator<Vertex> iterator()
 	{
@@ -146,16 +162,10 @@ public class DirectedGraphAdjMatr implements Graph
 	{
 		if (v == null || !containsVertex(v))
 			return false;
-		for (int i=0; i<maxNVertex; i++)
-		{
-			if (graph[i][0] == v)
-			{
-				for (int k=0; k<maxNVertex; k++)
-					graph[i][k] = null;
-				return true;
-			}
-		}
-		return false;
+
+		for (int k=0; k<maxNVertex; k++)
+			graph[findVertex(v)][k] = null;
+		return true;
 	}
 
 	@Override
