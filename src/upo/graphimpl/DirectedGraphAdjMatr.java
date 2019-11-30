@@ -5,6 +5,7 @@ package upo.graphimpl;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import upo.graph.Edge;
@@ -168,11 +169,24 @@ public class DirectedGraphAdjMatr implements Graph
 		return true;
 	}
 
+	/**
+	 * Returns a set of the vertices contained in this graph.
+	 *
+	 *
+	 * @return a set view of the vertices contained in this graph.
+	 */
 	@Override
 	public Set<Vertex> vertexSet()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Set<Vertex> vertices = new LinkedList<Vertex>();
+		
+		for (int i=0; i<maxNVertex; i++)
+		{
+			if (graph[i][0] == null)
+				vertices.add(graph[i][0]);
+		}
+		
+		return vertices;
 	}
 
 	@Override
