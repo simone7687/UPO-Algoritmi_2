@@ -109,10 +109,16 @@ public class DirectedGraphAdjMatr implements Graph
 	public boolean containsVertex(Vertex v)
 	{
 		// If the vertex is null or does not exist in the graph, returns false
-		if (v == null || !ListStructuresFunctions.keyExists(v, graph))
+		if (v == null)
 			return false;
-		
-		return true;
+		for (int i=0; i<maxNVertex; i++)
+		{
+			if (graph[i][0] == v)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
