@@ -95,11 +95,24 @@ public class DirectedGraphAdjMatr implements Graph
 		return false;
 	}
 
+	/**
+	 * Returns <tt>true</tt> if this graph contains the specified vertex. More
+	 * formally, returns <tt>true</tt> if and only if this graph contains a vertex
+	 * <code>u</code> such that <code>u.equals(v)</code>. If the specified vertex is
+	 * <code>null</code> returns <code>false</code>.
+	 *
+	 * @param v vertex whose presence in this graph is to be tested.
+	 *
+	 * @return <tt>true</tt> if this graph contains the specified vertex.
+	 */
 	@Override
 	public boolean containsVertex(Vertex v)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		// If the vertex is null or does not exist in the graph, returns false
+		if (v == null || !ListStructuresFunctions.keyExists(v, graph))
+			return false;
+		
+		return true;
 	}
 
 	@Override
