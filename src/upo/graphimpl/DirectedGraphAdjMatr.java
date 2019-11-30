@@ -48,8 +48,7 @@ public class DirectedGraphAdjMatr implements Graph
 	@Override
 	public Iterator<Vertex> iterator()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return graph[0][0].iterator();
 	}
 
 	@Override
