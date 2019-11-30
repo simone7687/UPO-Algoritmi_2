@@ -19,6 +19,8 @@ import upo.graph.Vertex;
  */
 public class DirectedGraphAdjMatr implements Graph 
 {
+	private final int maxNVertex = 100;
+	
 	private Vertex graph[][];
 	private Vertex visitedNodes[][];
 	private final boolean isDirected = true;
@@ -30,7 +32,7 @@ public class DirectedGraphAdjMatr implements Graph
 	 */
 	public DirectedGraphAdjMatr()
 	{
-		graph = new Vertex[100][];
+		graph = new Vertex[maxNVertex][maxNVertex];
 		setNotVisitedNodes();
 	}
 		
@@ -51,10 +53,45 @@ public class DirectedGraphAdjMatr implements Graph
 		return graph[0][0].iterator();
 	}
 
+	/**
+	 * Adds the specified vertex to this graph if not already present. More
+	 * formally, adds the specified vertex, <code>v</code>, to this graph if this
+	 * graph contains no vertex <code>u</code> such that <code>
+	 * u.equals(v)</code>. If this graph already contains such vertex, the call
+	 * leaves this graph unchanged and returns <tt>false</tt>. In combination with
+	 * the restriction on constructors, this ensures that graphs never contain
+	 * duplicate vertices.
+	 *
+	 * @param v vertex to be added to this graph.
+	 *
+	 * @return <tt>true</tt> if this graph did not already contain the specified
+	 *         vertex.
+	 *
+	 * @throws NullPointerException if the specified vertex is <code>
+	 * null</code>               .
+	 */
 	@Override
 	public boolean addVertex(Vertex v)
 	{
-		// TODO Auto-generated method stub
+		// If the vertex is null, throws NullPointerException
+		if (v == null)
+			throw new NullPointerException("The given parameter is null");
+		
+		//Vertex exists
+		if (containsVertex(v))
+			return false;
+		else
+		{
+			//Adds the vertex and initializes an empty list
+			for (int i=0; i<maxNVertex; i++)
+			{
+				if (graph[i][0] == null)
+				{
+					graph[i][0] = v;
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
