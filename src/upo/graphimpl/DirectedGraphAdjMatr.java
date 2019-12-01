@@ -4,8 +4,8 @@
 package upo.graphimpl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 import upo.graph.Edge;
@@ -178,7 +178,7 @@ public class DirectedGraphAdjMatr implements Graph
 	@Override
 	public Set<Vertex> vertexSet()
 	{
-		Set<Vertex> vertices = new LinkedList<Vertex>();
+		Set<Vertex> vertices = new HashSet<Vertex>();
 		
 		for (int i=0; i<maxNVertex; i++)
 		{
