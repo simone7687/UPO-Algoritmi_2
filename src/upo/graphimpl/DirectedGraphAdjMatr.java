@@ -232,7 +232,7 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (!containsEdge(sourceVertex, targetVertex))
-			for (int i=0; i<maxNVertex; i++)
+			for (int i=1; i<maxNVertex; i++)
 			{
 				if (graph[findVertex(sourceVertex)][i] == null)
 				{
@@ -265,7 +265,7 @@ public class DirectedGraphAdjMatr implements Graph
 			return false;
 		
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
-		for (int i=0; i<maxNVertex; i++)
+		for (int i=1; i<maxNVertex; i++)
 		{
 			if (graph[findVertex(sourceVertex)][i].equals(targetVertex))
 				return true;
@@ -343,7 +343,7 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		//Finds the edge with sourceVertex and targetVertex and removes it
 		if (containsEdge(sourceVertex, targetVertex))
-			for (int i=0; i<maxNVertex; i++)
+			for (int i=1; i<maxNVertex; i++)
 			{
 				if (graph[findVertex(sourceVertex)][i].equals(sourceVertex))
 				{
