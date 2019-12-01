@@ -382,7 +382,7 @@ public class DirectedGraphAdjMatr implements Graph
 	public int outDegreeOf(Vertex vertex)
 	{
 		if (isDirected)
-			// return ListStructuresFunctions.getAdjListIfExists(vertex, graph).size(); TODO: contrllare che la righa seguente conti solo i collegamenti con il vertice
+			// return ListStructuresFunctions.getAdjListIfExists(vertex, graph).size(); TODO: controllare che la righa seguente conti solo i collegamenti con il vertice
 			return graph[findVertex(vertex)].length - 1;
 		else
 			throw new UnsupportedOperationException();
