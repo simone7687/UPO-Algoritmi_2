@@ -486,10 +486,16 @@ public class DirectedGraphAdjMatr implements Graph
 		return false;
 	}
 
+	/**
+	 * Check whether the current graph is a directed acyclic graph (DAG) or not.
+	 * @return true if the current graph is a DAG, false otherwise.
+	 */
 	@Override
 	public boolean isDAG()
 	{
-		// TODO Auto-generated method stub
+		if (!isCyclic() && isDirected)
+			return true;
+		
 		return false;
 	}
 
