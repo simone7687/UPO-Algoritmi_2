@@ -4,8 +4,11 @@
 package upo.graphimpl;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 import upo.graph.Edge;
@@ -479,10 +482,46 @@ public class DirectedGraphAdjMatr implements Graph
 		return null;
 	}
 
+	/**
+	 * Check whether the current graph contains cycles or not.
+	 * @return true if the current graph contains cycles, false otherwise.
+	 */
 	@Override
 	public boolean isCyclic()
 	{
-		// TODO Auto-generated method stub
+		int visitedNodes = 0;
+		HashMap<Vertex, Integer> inDegreeVertices = new HashMap<>();	//TODO: meglio non usare HashMap
+		//Initializes the visited nodes to 'not visited'
+		for (int i=1; i<maxNVertex; i++)
+			inDegreeVertices.put(graph[i][0], inDegreeOf(graph[i][0]));
+		
+		//Creates a queue of all vertices with inDegree of 0
+		Queue<Vertex> zv = new LinkedList<Vertex>();
+		for (Vertex v : inDegreeVertices.keySet())
+			if (inDegreeVertices.get(v).equals(0))
+				zv.add(v);
+		
+		while (!zv.isEmpty())
+		{
+			visitedNodes++;
+			
+			Vertex v = zv.peek();
+			zv.remove();
+						
+			for (int i=1; i<maxNVertex; i++)
+			{
+				int ind = inDegreeVertices.get(graph[findVertex(v)][i]) - 1;
+				inDegreeVertices.put(graph[findVertex(v)][i], ind);
+				
+				if (ind == 0)
+					zv.add(graph[findVertex(v)][i]);
+			}
+		}
+		
+		//The graph contains a cycle
+		if (visitedNodes != graph.length)	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
+			return true;
+					
 		return false;
 	}
 
