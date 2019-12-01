@@ -391,8 +391,7 @@ public class DirectedGraphAdjMatr implements Graph
 	@Override
 	public boolean isDirected()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return isDirected;
 	}
 
 	/**
