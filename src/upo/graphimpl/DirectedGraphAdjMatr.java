@@ -189,25 +189,107 @@ public class DirectedGraphAdjMatr implements Graph
 		return vertices;
 	}
 
+	/**
+	 * Creates a new edge in this graph, going from the source vertex to the target
+	 * vertex, and returns the created edge. Some graphs do not allow
+	 * edge-multiplicity. In such cases, if the graph already contains an edge from
+	 * the specified source to the specified target, then this method does not
+	 * change the graph and returns <code>null</code>.
+	 *
+	 * <p>
+	 * The source and target vertices must already be contained in this graph. If
+	 * they are not found in graph IllegalArgumentException is thrown.
+	 * </p>
+	 *
+	 *
+	 * @param sourceVertex 
+	 *            source vertex of the edge.
+	 * @param targetVertex
+	 *            target vertex of the edge.
+	 *
+	 * @return The newly created edge if added to the graph, otherwise <code>
+	 * null</code>.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if source or target vertices are not found in the graph.
+	 * @throws NullPointerException
+	 *             if any of the specified vertices is <code>
+	 * null</code>.
+	 *
+	 */
 	@Override
 	public Edge addEdge(Vertex sourceVertex, Vertex targetVertex)
 	{
-		// TODO Auto-generated method stub
+		//If any of the specified vertex are null, throws NullPointerException
+		if (sourceVertex == null || targetVertex == null)
+			throw new NullPointerException("One or more given parameter is null.");
+		
+		//If the graph doesn't contain both the specified vertex, throws IllegalArgumentException
+		if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
+			throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
+		
+		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
+		if (!containsEdge(sourceVertex, targetVertex))
+			for (int i=0; i<maxNVertex; i++)
+			{
+				if (graph[findVertex(sourceVertex)][i] == null)
+				{
+					graph[findVertex(sourceVertex)][i] = targetVertex;
+					return new EdgeImpl(sourceVertex, targetVertex, this);
+				}
+			}
+		
 		return null;
 	}
 
+	/**
+	 * Returns <tt>true</tt> if and only if this graph contains an edge going from
+	 * the source vertex to the target vertex. If any of the specified vertices does
+	 * not exist in the graph, or if is <code>
+	 * null</code>, returns <code>false</code>.
+	 *
+	 * @param sourceVertex
+	 *            source vertex of the edge.
+	 * @param targetVertex
+	 *            target vertex of the edge.
+	 *
+	 * @return <tt>true</tt> if this graph contains the specified edge.
+	 */
 	@Override
 	public boolean containsEdge(Vertex sourceVertex, Vertex targetVertex)
 	{
-		// TODO Auto-generated method stub
+		//Returns false if any of the specified vertex does not exist in the current graph
+		if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
+			return false;
+		
+		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
+		for (int i=0; i<maxNVertex; i++)
+		{
+			if (graph[findVertex(sourceVertex)][i] == targetVertex)
+				return true;
+		}
+		
 		return false;
 	}
 
+	/**
+	 * Returns a set of the edges contained in this graph.
+	 *
+	 *
+	 * @return a set of the edges contained in this graph.
+	 */
 	@Override
 	public Set<Edge> edgeSet()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Set<Edge> edges = new HashSet<Edge>();
+		
+		for (int i=0; i<maxNVertex; i++)
+			if (graph[i][0] != null)
+				for (int k=1; i<maxNVertex; k++)
+					if (graph[i][k] != null)
+						edges.add(new EdgeImpl(graph[i][0], graph[i][k], this));
+		
+		return edges;
 	}
 
 	@Override
@@ -238,25 +320,82 @@ public class DirectedGraphAdjMatr implements Graph
 		return false;
 	}
 
+	/**
+	 * Removes an edge going from source vertex to target vertex, if such vertices
+	 * and such edge exist in this graph. Returns the edge if removed or
+	 * <code>null</code> otherwise.
+	 *
+	 * @param sourceVertex
+	 *            source vertex of the edge.
+	 * @param targetVertex
+	 *            target vertex of the edge.
+	 *
+	 * @return The removed edge, or <code>null</code> if no edge removed.
+	 */
 	@Override
 	public Edge removeEdge(Vertex sourceVertex, Vertex targetVertex)
 	{
-		// TODO Auto-generated method stub
+		//Returns null if any of the specified vertex does not exist in the current graph
+		if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
+			return null;
+		
+		//Finds the edge with sourceVertex and targetVertex and removes it
+		if (containsEdge(sourceVertex, targetVertex))
+			for (int i=0; i<maxNVertex; i++)
+			{
+				if (graph[findVertex(sourceVertex)][i] == sourceVertex)
+				{
+					graph[findVertex(sourceVertex)][i] = null;
+					return new EdgeImpl(sourceVertex, targetVertex, this);
+				}
+			}
+		
 		return null;
 	}
 
+	/**
+	 * Returns the weight assigned to a given edge. Unweighted graphs return 1.0 (as
+	 * defined by {@link #DEFAULT_EDGE_WEIGHT}), allowing weighted-graph algorithms
+	 * to apply to them when meaningful.
+	 *
+	 * @param sourceVertex
+	 *            source vertex of the edge.
+	 * @param targetVertex
+	 *            target vertex of the edge.
+	 * @return edge weight
+	 */
 	@Override
 	public double getEdgeWeight(Vertex sourceVertex, Vertex targetVertex)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		//Returns 0 if any of the specified vertex does not exist in the current graph
+		if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
+			return 0;
+
+		//Unweighted graph
+		return DEFAULT_EDGE_WEIGHT;
 	}
 
+	/**
+	 * Assigns a weight to an edge.
+	 *
+	 * @param sourceVertex
+	 *            source vertex of the edge.
+	 * @param targetVertex
+	 *            target vertex of the edge.
+	 * @param weight
+	 *            new weight for edge
+	 * @throws UnsupportedOperationException
+	 *             if the graph does not support weights
+	 */
 	@Override
 	public void setEdgeWeight(Vertex sourceVertex, Vertex targetVertex, double weight)
 	{
-		// TODO Auto-generated method stub
+		//If any of the specified vertex does not exist in the current graph does nothing
+		if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
+			return;
 
+		//Unweighted graph
+		throw new UnsupportedOperationException("This graph does not support weights");
 	}
 
 	@Override
