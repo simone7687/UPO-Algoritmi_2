@@ -23,7 +23,7 @@ public class DirectedGraphAdjMatr implements Graph
 	private final int maxNVertex = 100;
 	
 	private Vertex graph[][];
-	private Vertex visitedNodes[][];
+	private Colors visitedNodes[];
 	private final boolean isDirected = true;
 
 	/**
@@ -34,18 +34,20 @@ public class DirectedGraphAdjMatr implements Graph
 	public DirectedGraphAdjMatr()
 	{
 		graph = new Vertex[maxNVertex][maxNVertex];
+		visitedNodes = new Colors[maxNVertex];
 		setNotVisitedNodes();
 	}
 		
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
 	private void setNotVisitedNodes()
 	{
-		// TODO
+		for (int i=0; i<maxNVertex; i++)
+			visitedNodes[i] = Colors.WHITE;
 	}
 	//TODO: javadoc
 	private void setColorVertextVisitedNodes(Vertex v, Colors color)
 	{
-		// TODO
+		visitedNodes[findVertex(v)] = color;
 	}
 
 	//TODO: javadoc
