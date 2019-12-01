@@ -586,7 +586,7 @@ public class DirectedGraphAdjList implements Graph
 		}
 		
 		//The graph contains a cycle
-		if (visitedNodes != graph.keySet().size())
+		if (visitedNodes != ListStructuresFunctions.getVerticesNumber(graph))
 			return true;
 					
 		return false;
