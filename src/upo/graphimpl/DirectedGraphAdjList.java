@@ -44,6 +44,12 @@ public class DirectedGraphAdjList implements Graph
 		setNotVisitedNodes();
 	}
 	
+	//TODO: javadoc
+	public int getVerticesNumber()
+	{
+		return graph.keySet().size();
+	}
+
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
 	private void setNotVisitedNodes()
 	{
@@ -586,7 +592,7 @@ public class DirectedGraphAdjList implements Graph
 		}
 		
 		//The graph contains a cycle
-		if (visitedNodes != ListStructuresFunctions.getVerticesNumber(graph))
+		if (visitedNodes != getVerticesNumber())
 			return true;
 					
 		return false;
@@ -618,7 +624,7 @@ public class DirectedGraphAdjList implements Graph
 		if (!isDAG())
 			throw new UnsupportedOperationException("The current graph is not a DAG.");
 		
-		Vertex[] topologicalSortVertexs = new Vertex[ListStructuresFunctions.getVerticesNumber(graph)];
+		Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
 		Vertex root = graph.keySet().stream().findFirst().orElse(null);
 		
 		setNotVisitedNodes();

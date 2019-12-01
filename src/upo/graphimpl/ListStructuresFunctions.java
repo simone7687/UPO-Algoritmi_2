@@ -51,9 +51,4 @@ public class ListStructuresFunctions
 		
 		return adjList.stream().anyMatch(x -> x.getLabel().equals(targetVertex.getLabel()));
 	}
-
-	static int getVerticesNumber (LinkedHashMap<Vertex, LinkedList<Vertex>> graph)
-	{
-		return graph.keySet().size();
-	}
 }

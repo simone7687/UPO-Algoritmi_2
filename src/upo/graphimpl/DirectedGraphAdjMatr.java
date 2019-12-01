@@ -41,6 +41,12 @@ public class DirectedGraphAdjMatr implements Graph
 		setNotVisitedNodes();
 	}
 		
+	//TODO: javadoc
+	public int getVerticesNumber()
+	{
+		return graph.length;	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
+	}
+	
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
 	private void setNotVisitedNodes()
 	{
@@ -519,7 +525,7 @@ public class DirectedGraphAdjMatr implements Graph
 		}
 		
 		//The graph contains a cycle
-		if (visitedNodes != graph.length)	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
+		if (visitedNodes != getVerticesNumber())
 			return true;
 					
 		return false;
