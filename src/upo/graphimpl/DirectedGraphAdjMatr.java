@@ -58,7 +58,7 @@ public class DirectedGraphAdjMatr implements Graph
 			return 0;
 		for (int i=0; i<maxNVertex; i++)
 		{
-			if (graph[i][0] == v)
+			if (graph[i][0].equals(v))
 			{
 				return i+1;
 			}
@@ -132,7 +132,7 @@ public class DirectedGraphAdjMatr implements Graph
 			return false;
 		for (int i=0; i<maxNVertex; i++)
 		{
-			if (graph[i][0] == v)
+			if (graph[i][0].equals(v))
 			{
 				return true;
 			}
@@ -166,8 +166,8 @@ public class DirectedGraphAdjMatr implements Graph
 		if (v == null || !containsVertex(v))
 			return false;
 
-		for (int k=0; k<maxNVertex; k++)
-			graph[findVertex(v)][k] = null;
+		for (int i=0; i<maxNVertex; i++)
+			graph[findVertex(v)][i] = null;
 		return true;
 	}
 
@@ -267,7 +267,7 @@ public class DirectedGraphAdjMatr implements Graph
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
 		for (int i=0; i<maxNVertex; i++)
 		{
-			if (graph[findVertex(sourceVertex)][i] == targetVertex)
+			if (graph[findVertex(sourceVertex)][i].equals(targetVertex))
 				return true;
 		}
 		
@@ -345,7 +345,7 @@ public class DirectedGraphAdjMatr implements Graph
 		if (containsEdge(sourceVertex, targetVertex))
 			for (int i=0; i<maxNVertex; i++)
 			{
-				if (graph[findVertex(sourceVertex)][i] == sourceVertex)
+				if (graph[findVertex(sourceVertex)][i].equals(sourceVertex))
 				{
 					graph[findVertex(sourceVertex)][i] = null;
 					return new EdgeImpl(sourceVertex, targetVertex, this);
