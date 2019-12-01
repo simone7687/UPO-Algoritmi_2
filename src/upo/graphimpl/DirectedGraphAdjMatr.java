@@ -294,25 +294,98 @@ public class DirectedGraphAdjMatr implements Graph
 		return edges;
 	}
 
+	/**
+	 * Returns the degree of the specified vertex.
+	 * 
+	 * <p>
+	 * A degree of a vertex in an undirected graph is the number of edges touching
+	 * that vertex. Edges with same source and target vertices (self-loops) are
+	 * counted twice.
+	 * 
+	 * <p>
+	 * In directed graphs this method returns the sum of the "in degree" and the
+	 * "out degree".
+	 *
+	 * @param vertex
+	 *            vertex whose degree is to be calculated.
+	 * @return the degree of the specified vertex.
+	 */
 	@Override
 	public int degreeOf(Vertex vertex)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if (!isDirected)
+			throw new UnsupportedOperationException();
+		
+		return inDegreeOf(vertex) + outDegreeOf(vertex);
 	}
 
+	/**
+	 * Returns the "in degree" of the specified vertex.
+	 * 
+	 * <p>
+	 * The "in degree" of a vertex in a directed graph is the number of inward
+	 * directed edges from that vertex.
+	 * 
+	 * <p>
+	 * In the case of undirected graphs this method returns the number of edges
+	 * touching the vertex. Edges with same source and target vertices (self-loops)
+	 * are counted twice.
+	 *
+	 * @param vertex
+	 *            vertex whose degree is to be calculated.
+	 * @return the degree of the specified vertex.
+	 */
 	@Override
 	public int inDegreeOf(Vertex vertex)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if (isDirected)
+		{
+			int inCount = 0;
+			//Iterates between all vertices
+			for (int i=0; i<maxNVertex; i++)
+			{
+				//Doesn't consider itself
+				if (graph[i][0].getLabel().equals(vertex.getLabel()))
+					continue;
+				
+				//Increments the counter if the given vertex is present in the Adj list
+				for (int k=1; k<maxNVertex; k++)
+				{
+					if (graph[i][k].getLabel().equals(vertex.getLabel()))
+						inCount++;
+				}
+			}
+			
+			return inCount;
+		}
+		else
+		{
+			throw new UnsupportedOperationException();
+		}
 	}
 
+	/**
+	 * Returns the "out degree" of the specified vertex.
+	 * 
+	 * <p>
+	 * The "out degree" of a vertex in a directed graph is the number of outward
+	 * directed edges from that vertex.
+	 * 
+	 * <p>
+	 * Edges with same source and target vertices (self-loops) are counted twice.
+	 *
+	 * @param vertex
+	 *            vertex whose degree is to be calculated.
+	 * @return the degree of the specified vertex.
+	 */
 	@Override
 	public int outDegreeOf(Vertex vertex)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if (isDirected)
+			// return ListStructuresFunctions.getAdjListIfExists(vertex, graph).size(); TODO: contrllare che la righa seguente conti solo i collegamenti con il vertice
+			return graph[findVertex(vertex)].length - 1;
+		else
+			throw new UnsupportedOperationException();
 	}
 
 	@Override
