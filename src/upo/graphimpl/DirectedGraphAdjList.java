@@ -646,30 +646,39 @@ public class DirectedGraphAdjList implements Graph
 	{
 		if (!isDAG())
 			throw new UnsupportedOperationException("The current graph is not a DAG.");
-		
-		Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
-		Vertex root = graph.keySet().stream().findFirst().orElse(null);
-		
 		setNotVisitedNodes();
-		
-		return topologicalSortRecursive(root, topologicalSortVertexs, 0);
-	}
-	private Vertex[] topologicalSortRecursive(Vertex current, Vertex[] topologicalSortVertexs, int count)
-	{
-		topologicalSortVertexs[count] = current;
-		setColorVertextVisitedNodes(current, Colors.GREY);
-		//Gets the vertices connected to it
-		List<Vertex> neighbors = graph.get(current);
-		//Add the vertices connected to it in the queue and in the topologicalSort array if they are white
-		for (Vertex neighbor : neighbors)
+		setHeadVertices();
+		LinkedList<Vertex> queue = new LinkedList<Vertex>();
+		Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
+		int i = 0;
+		//Adds the root to the queue and sets it as gray
+		queue.addAll(root);
+		for (Vertex v : root)
+			setColorVertextVisitedNodes(v, Colors.GREY);
+		//While the queue is not empty
+		while (!queue.isEmpty())
 		{
-			//If the node has not been visited, adds it to the queue
-			if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+			//Gets the first element from the queue
+			Vertex current = queue.element();
+			//Add the vertices connected to it in the queue if they are white
+			for (Vertex neighbor : graph.get(current)) 
 			{
-				topologicalSortVertexs = topologicalSortRecursive(neighbor, topologicalSortVertexs, count);
+				//If the node has not been visited, adds it to the queue
+				if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+				{
+					queue.add(neighbor);
+					setColorVertextVisitedNodes(neighbor, Colors.GREY);
+				}
+			}
+			// delete the first of the queue end set it black
+			queue.remove(0);
+			if (!visitedNodes.get(current).equals(Colors.BLACK))
+			{
+				topologicalSortVertexs[i] = current;
+				i++;
+				setColorVertextVisitedNodes(current, Colors.BLACK);
 			}
 		}
-		setColorVertextVisitedNodes(current, Colors.BLACK);
 		return topologicalSortVertexs;
 	}
 

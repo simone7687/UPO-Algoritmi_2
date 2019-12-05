@@ -569,11 +569,52 @@ public class DirectedGraphAdjMatr implements Graph
 		return false;
 	}
 
+	/**
+	 * If the current graph is a DAG, it returns a topological sort of this graph. 
+	 * 
+	 * @throws UnsupportedOperationException if the current graph is not a DAG.
+	 * 
+	 * @return a topological sort of this graph. 
+	 */
 	@Override
 	public Vertex[] topologicalSort()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (!isDAG())
+			throw new UnsupportedOperationException("The current graph is not a DAG.");
+		setNotVisitedNodes();
+		setHeadVertices();
+		LinkedList<Vertex> queue = new LinkedList<Vertex>();
+		Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
+		int i = 0;
+		//Adds the root to the queue and sets it as gray
+		queue.addAll(root);
+		for (Vertex v : root)
+			setColorVertextVisitedNodes(v, Colors.GREY);
+		//While the queue is not empty
+		while (!queue.isEmpty())
+		{
+			//Gets the first element from the queue
+			Vertex current = queue.element();
+			//Add the vertices connected to it in the queue if they are white
+			for (int k=1; k<maxNVertex; k++)
+			{
+				//If the node has not been visited, adds it to the queue
+				if (visitedNodes[findVertex(graph[findVertex(current)][k])].equals(Colors.WHITE))
+				{
+					queue.add(graph[findVertex(current)][k]);
+					setColorVertextVisitedNodes(graph[findVertex(current)][k], Colors.GREY);
+				}
+			}
+			// delete the first of the queue end set it black
+			queue.remove(0);
+			if (!visitedNodes[findVertex(current)].equals(Colors.BLACK))
+			{
+				topologicalSortVertexs[i] = current;
+				i++;
+				setColorVertextVisitedNodes(current, Colors.BLACK);
+			}
+		}
+		return topologicalSortVertexs;
 	}
 
 	@Override
