@@ -30,7 +30,7 @@ import upo.graph.Vertex;
 public class DirectedGraphAdjList implements Graph 
 {
 	private LinkedHashMap<Vertex, LinkedList<Vertex>> graph;
-	private HashMap<Vertex, Colors> visitedNodes = new HashMap<>();
+	private HashMap<Vertex, Colors> visitedNodes;
 	private final boolean isDirected = true;
 	
 	/**
@@ -41,7 +41,7 @@ public class DirectedGraphAdjList implements Graph
 	public DirectedGraphAdjList()
 	{
 		graph = new LinkedHashMap<>();
-		setNotVisitedNodes();
+		visitedNodes = new HashMap<>();
 	}
 	
 	//TODO: javadoc
@@ -62,7 +62,7 @@ public class DirectedGraphAdjList implements Graph
 	{
 		visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(v, graph), color);
 	}
-	
+
 	@Override
 	public Iterator<Vertex> iterator() 
 	{

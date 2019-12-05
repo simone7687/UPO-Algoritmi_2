@@ -38,7 +38,6 @@ public class DirectedGraphAdjMatr implements Graph
 	{
 		graph = new Vertex[maxNVertex][maxNVertex];
 		visitedNodes = new Colors[maxNVertex];
-		setNotVisitedNodes();
 	}
 		
 	//TODO: javadoc
