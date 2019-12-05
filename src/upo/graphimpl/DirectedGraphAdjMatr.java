@@ -28,6 +28,7 @@ public class DirectedGraphAdjMatr implements Graph
 	private Vertex graph[][];
 	private Colors visitedNodes[];
 	private final boolean isDirected = true;
+	private Collection<Vertex> root;
 
 	/**
 	 * Initializes the graph
@@ -44,6 +45,31 @@ public class DirectedGraphAdjMatr implements Graph
 	public int getVerticesNumber()
 	{
 		return graph.length;	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
+	}
+	//TODO: javadoc
+	public void setHeadVertices()
+	{
+		for (int i=0; i<maxNVertex; i++)
+		{
+			boolean x = false;
+			for (int k=1; k<maxNVertex; k++)
+				if (graph[i][k] != null)
+					x = true;
+			if (containedEdge(graph[i][0]) && x)
+				root.add(graph[i][0]);
+		}
+		if (root.isEmpty())
+			root.add(graph[0][0]);
+	}
+	//TODO: javadoc
+	private boolean containedEdge(Vertex sourceVertex)
+	{
+		for (int i=0; i<maxNVertex; i++)
+		{
+			if (containsEdge(graph[i][0], sourceVertex))
+				return false;
+		}
+		return true;
 	}
 	
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'

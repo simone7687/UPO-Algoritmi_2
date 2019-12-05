@@ -32,6 +32,7 @@ public class DirectedGraphAdjList implements Graph
 	private LinkedHashMap<Vertex, LinkedList<Vertex>> graph;
 	private HashMap<Vertex, Colors> visitedNodes;
 	private final boolean isDirected = true;
+	private LinkedList<Vertex> root;
 	
 	/**
 	 * Initializes the graph
@@ -42,12 +43,34 @@ public class DirectedGraphAdjList implements Graph
 	{
 		graph = new LinkedHashMap<>();
 		visitedNodes = new HashMap<>();
+		root = new LinkedList<Vertex>();
 	}
 	
 	//TODO: javadoc
 	public int getVerticesNumber()
 	{
 		return graph.keySet().size();
+	}
+	//TODO: javadoc
+	public void setHeadVertices()
+	{
+		for (Vertex v : graph.keySet())
+		{
+			if (containedEdge(v) && !graph.get(v).isEmpty())
+				root.add(v);
+		}
+		if (root.isEmpty())
+			root.add(graph.keySet().stream().findFirst().orElse(null));
+	}
+	//TODO: javadoc
+	private boolean containedEdge(Vertex sourceVertex)
+	{
+		for (Vertex targetVertex : graph.keySet())
+		{
+			if (containsEdge(targetVertex, sourceVertex))
+				return false;
+		}
+		return true;
 	}
 
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
