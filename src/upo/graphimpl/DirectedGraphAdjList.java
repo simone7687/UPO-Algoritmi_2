@@ -503,14 +503,9 @@ public class DirectedGraphAdjList implements Graph
 		//If there's no nodes, returns null
 		if (graph.keySet().isEmpty())
 			return null;
-		
-		GraphSearchResultImpl tree;
-		
 		setNotVisitedNodes();
-		
-		Vertex root = graph.keySet().stream().findFirst().orElse(null);
-		tree = new GraphSearchResultImpl(type, root, this);
-		
+		Vertex root = getHeadVertices().get(0);
+		GraphSearchResultImpl tree = new GraphSearchResultImpl(type, root, this);
 		switch (type)
 		{
 			case BFS:
@@ -525,18 +520,16 @@ public class DirectedGraphAdjList implements Graph
 				{
 					//Gets the first element from the queue
 					Vertex current = queue.element();
-					//Gets the vertices connected to it
-					List<Vertex> neighbors = graph.get(current);
 					//Add the vertices connected to it in the queue and in the BFS tree if they are white
-			        for (Vertex neighbor : neighbors) 
+			        for (Vertex neighbor : graph.get(current)) 
 			        {
 			        	//If the node has not been visited, adds it to the queue
 			        	if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 			        	{
 							queue.add(neighbor);
-							setColorVertextVisitedNodes(neighbor, Colors.GREY);
 							tree.addLeaves(neighbor);
 							tree.addEdge(current, neighbor);
+							setColorVertextVisitedNodes(neighbor, Colors.GREY);
 			        	}
 					}
 					// delete the first of the queue end set it black
@@ -561,10 +554,8 @@ public class DirectedGraphAdjList implements Graph
 	private GraphSearchResultImpl DFSrecursive(GraphSearchResultImpl tree, Vertex current)
 	{
 		setColorVertextVisitedNodes(current, Colors.GREY);
-		//Gets the vertices connected to it
-		List<Vertex> neighbors = graph.get(current);
 		//Add the vertices connected to it in the queue and in the DFS tree if they are white
-		for (Vertex neighbor : neighbors)
+		for (Vertex neighbor : graph.get(current))
 		{
 			//If the node has not been visited, adds it to the queue
 			if (visitedNodes.get(neighbor).equals(Colors.WHITE))

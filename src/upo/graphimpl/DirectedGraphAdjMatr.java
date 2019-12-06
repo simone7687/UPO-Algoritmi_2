@@ -519,11 +519,95 @@ public class DirectedGraphAdjMatr implements Graph
 		throw new UnsupportedOperationException("This graph does not support weights");
 	}
 
+	/**
+	 * Performs a visit (of type <code>type</code>) over the current graph.
+	 * DA IMPLEMENTARE (per pratico 1): solo BFS e DFS_TOT.
+	 * HINT: si consideri l'implementazione di una visita generica che prenda in input un oggetto "frangia", 
+	 * con frangia diversa a seconda della visita (come visto a lezione).
+	 * 
+	 * @param type the search type.
+	 * 
+	 * @throws UnsupportedOperationException if the visit cannot be performed on the current graph 
+	 * (e.g., a Dijkstra visit on an unweighted graph).
+	 * 
+	 * @return a GraphSearchtreeult reptreeenting the treeult of the visit performed.
+	 * 
+	 */
 	@Override
 	public GraphSearchResult visit(SearchType type) throws UnsupportedOperationException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//If there's no nodes, returns null
+		if (graph == null)
+			return null;
+		
+		GraphSearchResultImpl tree;
+		
+		setNotVisitedNodes();
+		
+		Vertex root = getHeadVertices().get(0);
+		tree = new GraphSearchResultImpl(type, root, this);
+		
+		switch (type)
+		{
+			case BFS:
+				LinkedList<Vertex> queue = new LinkedList<Vertex>();				
+				//Adds the root to the queue and sets it as gray
+				setColorVertextVisitedNodes(root, Colors.GREY);
+				queue.add(root);
+				//Adds the root in the BFS tree
+				tree.addLeaves(root);
+				//While the queue is not empty
+				while (!queue.isEmpty())
+				{
+					//Gets the first element from the queue
+					Vertex current = queue.element();
+					//Add the vertices connected to it in the queue and in the BFS tree if they are white
+					for (Vertex neighbor : getEdgees(current)) 
+					{
+						//If the node has not been visited, adds it to the queue
+						if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE))
+						{
+							queue.add(neighbor);
+							tree.addLeaves(neighbor);
+							tree.addEdge(current, neighbor);
+							setColorVertextVisitedNodes(neighbor, Colors.GREY);
+						}
+					}
+					// delete the first of the queue end set it black
+					queue.remove(0);
+					setColorVertextVisitedNodes(current, Colors.BLACK);
+				}
+				return tree;
+			case DFS:
+				throw new UnsupportedOperationException();	// TODO: non so cosa si deve fare
+			case DFS_TOT:
+				//Adds the root to the queue and sets it as gray
+				setColorVertextVisitedNodes(root, Colors.GREY);
+				//Adds the root in the BFS tree
+				tree.addLeaves(root);
+				return DFSrecursive(tree, root);
+			case DIJKSTRA:
+				throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");	// TODO: non sono sicuro che non si veve implementare per questo grafico
+			default:
+				return null;
+		}
+	}
+	private GraphSearchResultImpl DFSrecursive(GraphSearchResultImpl tree, Vertex current)
+	{
+		setColorVertextVisitedNodes(current, Colors.GREY);
+		//Add the vertices connected to it in the queue and in the DFS tree if they are white
+		for (Vertex neighbor : getEdgees(current))
+		{
+			//If the node has not been visited, adds it to the queue
+			if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE))
+			{
+				tree.addLeaves(neighbor);
+				tree.addEdge(current, neighbor);
+				tree = DFSrecursive(tree, neighbor);
+			}
+		}
+		setColorVertextVisitedNodes(current, Colors.BLACK);
+		return tree;
 	}
 
 	/**
