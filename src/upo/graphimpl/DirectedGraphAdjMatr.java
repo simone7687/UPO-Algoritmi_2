@@ -100,6 +100,18 @@ public class DirectedGraphAdjMatr implements Graph
 		}
 		return 0;
 	}
+	//TODO: javadoc
+	private Collection<Vertex> getEdgees(Vertex v)
+	{
+		LinkedList<Vertex> edgees = new LinkedList<Vertex>();
+		// If the vertex is null or does not exist in the graph, returns false
+		if (v == null)
+			return null;
+		for (int i=1; i<maxNVertex; i++)
+			if (graph[findVertex(v)][1] != null)
+				edgees.add(graph[findVertex(v)][i]);
+		return edgees;
+	}
 
 	@Override
 	public Iterator<Vertex> iterator()
@@ -267,11 +279,11 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (!containsEdge(sourceVertex, targetVertex))
-			for (int i=1; i<maxNVertex; i++)
+			for (Vertex v : getEdgees(sourceVertex))
 			{
-				if (graph[findVertex(sourceVertex)][i] == null)
+				if (v == null)
 				{
-					graph[findVertex(sourceVertex)][i] = targetVertex;
+					v = targetVertex;
 					return new EdgeImpl(sourceVertex, targetVertex, this);
 				}
 			}
@@ -300,9 +312,9 @@ public class DirectedGraphAdjMatr implements Graph
 			return false;
 		
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
-		for (int i=1; i<maxNVertex; i++)
+		for (Vertex v : getEdgees(sourceVertex))
 		{
-			if (graph[findVertex(sourceVertex)][i].equals(targetVertex))
+			if (v.equals(targetVertex))
 				return true;
 		}
 		
@@ -322,9 +334,9 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		for (int i=0; i<maxNVertex; i++)
 			if (graph[i][0] != null)
-				for (int k=1; i<maxNVertex; k++)
-					if (graph[i][k] != null)
-						edges.add(new EdgeImpl(graph[i][0], graph[i][k], this));
+			for (Vertex v : getEdgees(graph[i][0]))
+				if (v != null)
+						edges.add(new EdgeImpl(graph[i][0], v, this));
 		
 		return edges;
 	}
@@ -540,13 +552,13 @@ public class DirectedGraphAdjMatr implements Graph
 			Vertex v = zv.peek();
 			zv.remove();
 						
-			for (int i=1; i<maxNVertex; i++)
+			for (Vertex neighbor : getEdgees(v))
 			{
-				int ind = inDegreeVertices.get(graph[findVertex(v)][i]) - 1;
-				inDegreeVertices.put(graph[findVertex(v)][i], ind);
+				int ind = inDegreeVertices.get(neighbor) - 1;
+				inDegreeVertices.put(neighbor, ind);
 				
 				if (ind == 0)
-					zv.add(graph[findVertex(v)][i]);
+					zv.add(neighbor);
 			}
 		}
 		
