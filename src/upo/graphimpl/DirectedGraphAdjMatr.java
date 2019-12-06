@@ -46,7 +46,7 @@ public class DirectedGraphAdjMatr implements Graph
 		return graph.length;	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
 	}
 	//TODO: javadoc
-	public Collection<Vertex> getHeadVertices()
+	public LinkedList<Vertex> getHeadVertices()
 	{
 		LinkedList<Vertex> root = new LinkedList<Vertex>();
 		for (int i=0; i<maxNVertex; i++)

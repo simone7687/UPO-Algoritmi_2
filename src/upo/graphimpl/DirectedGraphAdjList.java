@@ -50,7 +50,7 @@ public class DirectedGraphAdjList implements Graph
 		return graph.keySet().size();
 	}
 	//TODO: javadoc
-	public Collection<Vertex> getHeadVertices()
+	public LinkedList<Vertex> getHeadVertices()
 	{
 		LinkedList<Vertex> root = new LinkedList<Vertex>();
 		for (Vertex v : graph.keySet())
