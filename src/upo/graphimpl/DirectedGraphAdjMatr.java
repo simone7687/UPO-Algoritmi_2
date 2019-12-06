@@ -28,7 +28,6 @@ public class DirectedGraphAdjMatr implements Graph
 	private Vertex graph[][];
 	private Colors visitedNodes[];
 	private final boolean isDirected = true;
-	private Collection<Vertex> root;
 
 	/**
 	 * Initializes the graph
@@ -47,8 +46,9 @@ public class DirectedGraphAdjMatr implements Graph
 		return graph.length;	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
 	}
 	//TODO: javadoc
-	public void setHeadVertices()
+	public Collection<Vertex> getHeadVertices()
 	{
+		LinkedList<Vertex> root = new LinkedList<Vertex>();
 		for (int i=0; i<maxNVertex; i++)
 		{
 			boolean x = false;
@@ -60,6 +60,7 @@ public class DirectedGraphAdjMatr implements Graph
 		}
 		if (root.isEmpty())
 			root.add(graph[0][0]);
+		return root;
 	}
 	//TODO: javadoc
 	private boolean containedEdge(Vertex sourceVertex)
@@ -582,13 +583,12 @@ public class DirectedGraphAdjMatr implements Graph
 		if (!isDAG())
 			throw new UnsupportedOperationException("The current graph is not a DAG.");
 		setNotVisitedNodes();
-		setHeadVertices();
 		LinkedList<Vertex> queue = new LinkedList<Vertex>();
 		Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
 		int i = 0;
 		//Adds the root to the queue and sets it as gray
-		queue.addAll(root);
-		for (Vertex v : root)
+		queue.addAll(getHeadVertices());
+		for (Vertex v : getHeadVertices())
 			setColorVertextVisitedNodes(v, Colors.GREY);
 		//While the queue is not empty
 		while (!queue.isEmpty())
