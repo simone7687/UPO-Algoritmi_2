@@ -24,72 +24,62 @@ public class GraphSearchResultImpl implements GraphSearchResult {
         tree = new LinkedHashMap<>();
     }
 
-    // TODO: java doc
-    public boolean addLeaves(Vertex v) {
+    public boolean addLeaves(Vertex l) {
         // If the vertex is null, throws NullPointerException
-        if (v == null)
+        if (l == null)
             throw new NullPointerException("The given parameter is null");
 
         //Vertex exists
-        if (containsLeaves(v))
+        if (containsLeaves(l))
             return false;
         else {
             //Adds the vertex and initializes an empty list
-            tree.put(v, new LinkedList<Vertex>());
+            tree.put(l, new LinkedList<Vertex>());
             return true;
         }
     }
-
-    // TODO: java doc
-    private boolean keyExists(Vertex v) {
-        return tree.keySet().stream().anyMatch(x -> x.getLabel().equals(v.getLabel()));
+    private boolean keyExists(Vertex l) {
+        return tree.keySet().stream().anyMatch(x -> x.getLabel().equals(l.getLabel()));
     }
-
-    // TODO: java doc
-    public boolean containsLeaves(Vertex v) {
-        // If the vertex is null or does not exist in the graph, returns false
-        if (v == null || !keyExists(v))
+    public boolean containsLeaves(Vertex l) {
+        // If the leaf is null or does not exist in the graph, returns false
+        if (l == null || !keyExists(l))
             return false;
 
         return true;
     }
-
-    // TODO: java doc
-    public Edge addEdge(Vertex sourceVertex, Vertex targetVertex) {
+    public Edge addEdge(Vertex sourceLeaf, Vertex targetLeaf) {
         //If any of the specified vertex are null, throws NullPointerException
-        if (sourceVertex == null || targetVertex == null)
+        if (sourceLeaf == null || targetLeaf == null)
             throw new NullPointerException("One or more given parameter is null.");
 
         //If the graph doesn't contain both the specified vertex, throws IllegalArgumentException
-        if (!containsLeaves(sourceVertex) || !containsLeaves(targetVertex))
+        if (!containsLeaves(sourceLeaf) || !containsLeaves(targetLeaf))
             throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
 
         //Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
-        if (containsLeaves(sourceVertex)) {
-            if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, tree), targetVertex))
-                tree.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, tree)).add(targetVertex);
+        if (containsLeaves(sourceLeaf)) {
+            if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceLeaf, tree), targetLeaf))
+                tree.get(ListStructuresFunctions.getKeyAsVertex(sourceLeaf, tree)).add(targetLeaf);
 
-            return new EdgeImpl(sourceVertex, targetVertex, this);
+            return new EdgeImpl(sourceLeaf, targetLeaf, this);
         }
 
         return null;
     }
-
-    // TODO: java doc
-    public boolean containsEdge(Vertex sourceVertex, Vertex targetVertex) {
+    public boolean containsEdge(Vertex sourceLeaf, Vertex targetLeaf) {
         //Returns false if any of the specified vertex does not exist in the current graph
-        if (!containsLeaves(sourceVertex) || !containsLeaves(targetVertex))
+        if (!containsLeaves(sourceLeaf) || !containsLeaves(targetLeaf))
             return false;
 
         //If the graph contains an edge from source to target, returns true. Does not consider edge weight.
-        LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceVertex, tree);
+        LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceLeaf, tree);
         if (vertices != null && vertices.size() > 0)
-            return ListStructuresFunctions.adjListContains(vertices, targetVertex);
+            return ListStructuresFunctions.adjListContains(vertices, targetLeaf);
 
         return false;
     }
-
-    // TODO: java doc
+    
     @Override
     public Iterator<Vertex> iterator() {
         return null;        //TODO: forse graph.iterator();
@@ -104,7 +94,6 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     public SearchType getType() {
         return type;
     }
-
 
     /**
      * Returns the source vertex S of the search which generates this result
