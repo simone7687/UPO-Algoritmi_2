@@ -72,6 +72,39 @@ public class DirectedGraphAdjMatr implements Graph
 		}
 		return true;
 	}
+	//TODO: jdoc ritorna il ciclo o null
+	private Collection<Vertex> checkCicle(Vertex current, Vertex find)
+	{
+		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
+		Collection<Vertex> components = new LinkedList<Vertex>();
+		setColorVertextVisitedNodes(current, Colors.GREY);
+		currentComponents.addAll(components);
+		currentComponents.add(current);
+		//Gets the vertices connected to it
+		if(current != null)
+			for (Vertex neighbor : getEdgees(current))	///ERRORE NULLO
+			{
+				if (neighbor.equals(find))
+				{
+					if (currentComponents.size() < components.size() || components.isEmpty())
+					{
+						components.clear();
+						components.addAll(currentComponents);
+					}
+				}
+				else if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE))
+				{
+					neighborComponents = checkCicle(neighbor, find);
+					if (!neighborComponents.isEmpty() && (neighborComponents.size() < components.size() || components.isEmpty()))
+					{
+						components.clear();
+						components.addAll(neighborComponents);
+					}
+				}
+			}
+		return components;
+	}
 	
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
 	private void setNotVisitedNodes()
@@ -611,39 +644,12 @@ public class DirectedGraphAdjMatr implements Graph
 	@Override
 	public boolean isCyclic()
 	{
-		int visitedNodes = 0;
-		HashMap<Vertex, Integer> inDegreeVertices = new HashMap<>();	//TODO: meglio non usare HashMap
-		//Initializes the visited nodes to 'not visited'
-		for (int i=1; i<maxNVertex; i++)
-			inDegreeVertices.put(graph[i][0], inDegreeOf(graph[i][0]));
-		
-		//Creates a queue of all vertices with inDegree of 0
-		Queue<Vertex> zv = new LinkedList<Vertex>();
-		for (Vertex v : inDegreeVertices.keySet())
-			if (inDegreeVertices.get(v).equals(0))
-				zv.add(v);
-		
-		while (!zv.isEmpty())
+		for (int i=0; i<maxNVertex; i++)
 		{
-			visitedNodes++;
-			
-			Vertex v = zv.peek();
-			zv.remove();
-						
-			for (Vertex neighbor : getEdgees(v))
-			{
-				int ind = inDegreeVertices.get(neighbor) - 1;
-				inDegreeVertices.put(neighbor, ind);
-				
-				if (ind == 0)
-					zv.add(neighbor);
-			}
+			setNotVisitedNodes();
+			if (!(checkCicle(graph[i][0], graph[i][0]).isEmpty()))	//ERRORE
+				return true;
 		}
-		
-		//The graph contains a cycle
-		if (visitedNodes != getVerticesNumber())
-			return true;
-					
 		return false;
 	}
 

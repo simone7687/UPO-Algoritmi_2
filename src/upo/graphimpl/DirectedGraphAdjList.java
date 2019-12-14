@@ -72,6 +72,39 @@ public class DirectedGraphAdjList implements Graph
 		}
 		return true;
 	}
+	//TODO: jdoc ritorna il ciclo o null
+	private Collection<Vertex> checkCicle(Vertex current, Vertex find)
+	{
+		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
+		Collection<Vertex> components = new LinkedList<Vertex>();
+		setColorVertextVisitedNodes(current, Colors.GREY);
+		currentComponents.addAll(components);
+		currentComponents.add(current);
+		//Gets the vertices connected to it
+		if(current != null)
+			for (Vertex neighbor : graph.get(current))
+			{
+				if (neighbor.equals(find))
+				{
+					if (currentComponents.size() < components.size() || components.isEmpty())
+					{
+						components.clear();
+						components.addAll(currentComponents);
+					}
+				}
+				else if (visitedNodes.get(neighbor).equals(Colors.WHITE))
+				{
+					neighborComponents = checkCicle(neighbor, find);
+					if (!neighborComponents.isEmpty() && (neighborComponents.size() < components.size() || components.isEmpty()))
+					{
+						components.clear();
+						components.addAll(neighborComponents);
+					}
+				}
+			}
+		return components;
+	}
 
 	//TODO: javadoc: Initializes the visited nodes to 'not visited'
 	private void setNotVisitedNodes()
@@ -576,39 +609,12 @@ public class DirectedGraphAdjList implements Graph
 	@Override
 	public boolean isCyclic() 
 	{
-		int visitedNodes = 0;
-		HashMap<Vertex, Integer> inDegreeVertices = new HashMap<>();
-		//Initializes the visited nodes to 'not visited'
 		for (Vertex v : graph.keySet())
-			inDegreeVertices.put(v, inDegreeOf(v));
-		
-		//Creates a queue of all vertices with inDegree of 0
-		Queue<Vertex> zv = new LinkedList<Vertex>();
-		for (Vertex v : inDegreeVertices.keySet())
-			if (inDegreeVertices.get(v).equals(0))
-				zv.add(v);
-		
-		while (!zv.isEmpty())
 		{
-			visitedNodes++;
-			
-			Vertex v = zv.peek();
-			zv.remove();
-						
-			for (Vertex adjv : graph.get(v))
-			{
-				int ind = inDegreeVertices.get(adjv) - 1;
-				inDegreeVertices.put(adjv, ind);
-				
-				if (ind == 0)
-					zv.add(adjv);
-			}
+			setNotVisitedNodes();
+			if (!checkCicle(v, v).isEmpty())
+				return true;
 		}
-		
-		//The graph contains a cycle
-		if (visitedNodes != getVerticesNumber())
-			return true;
-					
 		return false;
 	}
 
@@ -697,7 +703,7 @@ public class DirectedGraphAdjList implements Graph
 		{
 			if(!visitedNodes2.get(current).equals(Colors.BLACK))
 			{
-				currentComponents = stronglyConnectedComponentsRecursive(current, current, currentComponents);
+				currentComponents = checkCicle(current, current);
 				if (!currentComponents.isEmpty())
 				{
 					for (Vertex v : currentComponents)
@@ -706,36 +712,6 @@ public class DirectedGraphAdjList implements Graph
 				}
 				visitedNodes.clear();
 				visitedNodes.putAll(visitedNodes2);
-			}
-		}
-		return components;
-	}
-	private Collection<Vertex> stronglyConnectedComponentsRecursive(Vertex current, Vertex find, Collection<Vertex> components)	//TODO: errore
-	{
-		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
-		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
-		setColorVertextVisitedNodes(current, Colors.GREY);
-		currentComponents.addAll(components);
-		currentComponents.add(current);
-		//Gets the vertices connected to it
-		for (Vertex neighbor : graph.get(current))
-		{
-			if (neighbor.equals(find))
-			{
-				if (currentComponents.size() < components.size() || components.isEmpty())
-				{
-					components.clear();
-					components.addAll(currentComponents);
-				}
-			}
-			else if (visitedNodes.get(neighbor).equals(Colors.WHITE))
-			{
-				neighborComponents = stronglyConnectedComponentsRecursive(neighbor, find, currentComponents);
-				if (!neighborComponents.isEmpty() && (neighborComponents.size() < components.size() || components.isEmpty()))
-				{
-					components.clear();
-					components.addAll(neighborComponents);
-				}
 			}
 		}
 		return components;
