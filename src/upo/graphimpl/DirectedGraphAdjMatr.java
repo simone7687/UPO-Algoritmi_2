@@ -401,18 +401,16 @@ public class DirectedGraphAdjMatr implements Graph
 		{
 			int inCount = 0;
 			//Iterates between all vertices
-			for (int i=0; i<maxNVertex; i++)
+			for (Vertex i : vertexSet())
 			{
 				//Doesn't consider itself
-				if (graph[i][0] == vertex)
+				if (i == vertex)
 					continue;
 				
 				//Increments the counter if the given vertex is present in the Adj list
-				for (int k=1; k<maxNVertex; k++)
-				{
-					if (graph[i][k] == vertex)
+				for (Vertex v : getEdgees(i))
+					if (v == vertex)
 						inCount++;
-				}
 			}
 			
 			return inCount;
