@@ -279,11 +279,9 @@ public class DirectedGraphAdjList implements Graph
 			throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
 		
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
-		if (containsVertex(sourceVertex))
+		if (!containsEdge(sourceVertex, targetVertex))
 		{
-			if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceVertex, graph), targetVertex))
-				graph.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, graph)).add(targetVertex);
-			
+			graph.get(ListStructuresFunctions.getKeyAsVertex(sourceVertex, graph)).add(targetVertex);
 			return new EdgeImpl(sourceVertex, targetVertex, this);
 		}
 				
