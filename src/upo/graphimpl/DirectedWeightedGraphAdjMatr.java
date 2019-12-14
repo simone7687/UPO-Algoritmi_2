@@ -1,6 +1,5 @@
 package upo.graphimpl;
 
-public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr
-{
-	
+public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr {
+
 }
