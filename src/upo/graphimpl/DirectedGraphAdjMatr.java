@@ -4,11 +4,9 @@
 package upo.graphimpl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 
 import upo.graph.Edge;
@@ -41,12 +39,12 @@ public class DirectedGraphAdjMatr implements Graph
 	}
 		
 	//TODO: javadoc
-	public int getVerticesNumber()
+	private int getVerticesNumber()
 	{
-		return graph.length;	//TODO: graph.keySet().size()) controllare che graph.length conti il numero di vertici
+		return vertexSet().size();
 	}
 	//TODO: javadoc
-	public LinkedList<Vertex> getHeadVertices()
+	private LinkedList<Vertex> getHeadVertices()
 	{
 		LinkedList<Vertex> root = new LinkedList<Vertex>();
 		for (int i=0; i<maxNVertex; i++)
