@@ -408,12 +408,22 @@ public class DirectedGraphAdjListTest
 		VertexImpl v2 = new VertexImpl("C");
 		graph.addVertex(v2);
 
+		VertexImpl v3 = new VertexImpl("D");
+		graph.addVertex(v3);
+
+		VertexImpl v4 = new VertexImpl("E");
+		graph.addVertex(v4);
+
 		assertNotNull(graph.addEdge(v0, v1));
 		assertNotNull(graph.addEdge(v1, v2));
 		assertNotNull(graph.addEdge(v2, v0));
 
+		assertNotNull(graph.addEdge(v1, v3));
+		assertNotNull(graph.addEdge(v3, v4));
+		assertNotNull(graph.addEdge(v3, v2));
+
 		assertNotNull(graph.stronglyConnectedComponents());
 
-		assertEquals("{{A,B,C}}", graph.toStringSCC());
+		assertEquals("{{A,C,B},{D},{E}}", graph.toStringSCC());
 	}
 }

@@ -69,19 +69,14 @@ public class DirectedGraphAdjMatr implements Graph
 		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
 		Collection<Vertex> components = new LinkedList<Vertex>();
 		setColorVertextVisitedNodes(current, Colors.GREY);
-		currentComponents.addAll(components);
-		currentComponents.add(current);
 		//Gets the vertices connected to it
 		if(current != null)
-			for (Vertex neighbor : getEdgees(current))	///ERRORE NULLO
+			for (Vertex neighbor : getEdgees(current))
 			{
-				if (neighbor.equals(find))
+				if (neighbor.equals(find) && (currentComponents.size() < components.size() || components.isEmpty()))
 				{
-					if (currentComponents.size() < components.size() || components.isEmpty())
-					{
-						components.clear();
-						components.addAll(currentComponents);
-					}
+					components.clear();
+					components.add(neighbor);
 				}
 				else if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE))
 				{
@@ -90,6 +85,7 @@ public class DirectedGraphAdjMatr implements Graph
 					{
 						components.clear();
 						components.addAll(neighborComponents);
+						components.add(neighbor);
 					}
 				}
 			}
@@ -703,17 +699,78 @@ public class DirectedGraphAdjMatr implements Graph
 		return topologicalSortVertexs;
 	}
 
+	/**
+	 * If the current graph is directed, this method returns the strongly connected components
+	 * of the graph. Otherwise, the method throws an UnsupportedOperationException.
+	 * 
+	 * @throws UnsupportedOperationException if the current graph is not directed.
+	 * 
+	 * @return a collection of collections of vertices representing the strongly connected components of the graph.
+	 */
 	@Override
-	public Collection<Collection<Vertex>> stronglyConnectedComponents()
+	public Collection<Collection<Vertex>> stronglyConnectedComponents() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (!isDirected)
+			throw new UnsupportedOperationException("The current graph is not directed.");
+		
+		Collection<Collection<Vertex>> components = new LinkedList<Collection<Vertex>>();
+		
+		setNotVisitedNodes();
+		
+		for (Vertex current : vertexSet())
+		{
+			if(!visitedNodes[findVertex(current)].equals(Colors.BLACK))
+			{
+				Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+				currentComponents.addAll(checkCicle(current, current));
+				if (currentComponents.isEmpty())
+					currentComponents.add(current);
+				for (Vertex v : currentComponents)
+					setColorVertextVisitedNodes(v, Colors.BLACK);
+				components.add(currentComponents);
+			}
+		}
+		return components;
 	}
 
+	/**
+	 * Returns a string representing the strongly connected components of the graph.
+	 * For instance: {{1,2,3},{4,6},{5}}
+	 * 
+	 * @throws UnsupportedOperationException if the current graph is not directed.
+	 * 
+	 * @return a string representing the strongly connected components of the graph.
+	 */
 	@Override
-	public String toStringSCC()
+	public String toStringSCC() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (!isDirected)
+			throw new UnsupportedOperationException("The current graoh is not directed.");
+
+		Collection<Collection<Vertex>> components = stronglyConnectedComponents();
+		String ren = new String();
+		boolean k = false, i = false;
+
+		ren += "{";
+		for (Collection<Vertex> collectionV : components)
+		{
+			if (k)
+				ren += ",";
+			k = true;
+			ren += "{";
+			i = false;
+			for (Vertex v : collectionV)
+				if(v != null)
+				{
+					if (i)
+						ren += ",";
+					i = true;
+					ren += v.getLabel();
+				}
+			ren += "}";
+		}
+		ren += "}";
+
+		return ren;
 	}
 }

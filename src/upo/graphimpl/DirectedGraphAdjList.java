@@ -69,19 +69,14 @@ public class DirectedGraphAdjList implements Graph
 		Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
 		Collection<Vertex> components = new LinkedList<Vertex>();
 		setColorVertextVisitedNodes(current, Colors.GREY);
-		currentComponents.addAll(components);
-		currentComponents.add(current);
 		//Gets the vertices connected to it
 		if(current != null)
 			for (Vertex neighbor : graph.get(current))
 			{
-				if (neighbor.equals(find))
+				if (neighbor.equals(find) && (currentComponents.size() < components.size() || components.isEmpty()))
 				{
-					if (currentComponents.size() < components.size() || components.isEmpty())
-					{
-						components.clear();
-						components.addAll(currentComponents);
-					}
+					components.clear();
+					components.add(neighbor);
 				}
 				else if (visitedNodes.get(neighbor).equals(Colors.WHITE))
 				{
@@ -90,6 +85,7 @@ public class DirectedGraphAdjList implements Graph
 					{
 						components.clear();
 						components.addAll(neighborComponents);
+						components.add(neighbor);
 					}
 				}
 			}
@@ -681,25 +677,20 @@ public class DirectedGraphAdjList implements Graph
 			throw new UnsupportedOperationException("The current graph is not directed.");
 		
 		Collection<Collection<Vertex>> components = new LinkedList<Collection<Vertex>>();
-		Collection<Vertex> currentComponents = new LinkedList<Vertex>();
-		HashMap<Vertex, Colors> visitedNodes2 = new HashMap<>();
 		
 		setNotVisitedNodes();
-		visitedNodes2.putAll(visitedNodes);
 		
 		for (Vertex current : graph.keySet())
 		{
-			if(!visitedNodes2.get(current).equals(Colors.BLACK))
+			if(!visitedNodes.get(current).equals(Colors.BLACK))
 			{
-				currentComponents = checkCicle(current, current);
-				if (!currentComponents.isEmpty())
-				{
-					for (Vertex v : currentComponents)
-						visitedNodes2.put(ListStructuresFunctions.getKeyAsVertex(v, graph), Colors.BLACK);
-					components.add(currentComponents);
-				}
-				visitedNodes.clear();
-				visitedNodes.putAll(visitedNodes2);
+				Collection<Vertex> currentComponents = new LinkedList<Vertex>();
+				currentComponents.addAll(checkCicle(current, current));
+				if (currentComponents.isEmpty())
+					currentComponents.add(current);
+				for (Vertex v : currentComponents)
+					setColorVertextVisitedNodes(v, Colors.BLACK);
+				components.add(currentComponents);
 			}
 		}
 		return components;
@@ -721,16 +712,24 @@ public class DirectedGraphAdjList implements Graph
 
 		Collection<Collection<Vertex>> components = stronglyConnectedComponents();
 		String ren = new String();
+		boolean k = false, i = false;
 
 		ren += "{";
 		for (Collection<Vertex> collectionV : components)
 		{
+			if (k)
+				ren += ",";
+			k = true;
 			ren += "{";
+			i = false;
 			for (Vertex v : collectionV)
 			{
-				ren += v.getLabel() + ",";
+				if (i)
+					ren += ",";
+				i = true;
+				ren += v.getLabel();
 			}
-			ren += "},";
+			ren += "}";
 		}
 		ren += "}";
 
