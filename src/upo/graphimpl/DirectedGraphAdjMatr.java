@@ -55,22 +55,12 @@ public class DirectedGraphAdjMatr implements Graph
 			for (int k=1; k<maxNVertex; k++)
 				if (graph[i][k] != null)
 					x = true;
-			if (containedEdge(graph[i][0]) && x)
+			if (inDegreeOf(graph[i][0]) == 0 && x)
 				root.add(graph[i][0]);
 		}
 		if (root.isEmpty())
 			root.add(graph[0][0]);
 		return root;
-	}
-	//TODO: javadoc
-	private boolean containedEdge(Vertex sourceVertex)
-	{
-		for (int i=0; i<maxNVertex; i++)
-		{
-			if (containsEdge(graph[i][0], sourceVertex))
-				return false;
-		}
-		return true;
 	}
 	//TODO: jdoc ritorna il ciclo o null
 	private Collection<Vertex> checkCicle(Vertex current, Vertex find)

@@ -55,22 +55,12 @@ public class DirectedGraphAdjList implements Graph
 		LinkedList<Vertex> root = new LinkedList<Vertex>();
 		for (Vertex v : graph.keySet())
 		{
-			if (containedEdge(v) && !graph.get(v).isEmpty())
+			if (inDegreeOf(v) == 0 && !graph.get(v).isEmpty())
 				root.add(v);
 		}
 		if (root.isEmpty())
 			root.add(graph.keySet().stream().findFirst().orElse(null));
 		return root;
-	}
-	//TODO: javadoc
-	private boolean containedEdge(Vertex sourceVertex)
-	{
-		for (Vertex targetVertex : graph.keySet())
-		{
-			if (containsEdge(targetVertex, sourceVertex))
-				return false;
-		}
-		return true;
 	}
 	//TODO: jdoc ritorna il ciclo o null
 	private Collection<Vertex> checkCicle(Vertex current, Vertex find)
