@@ -108,7 +108,7 @@ public class DirectedGraphAdjMatr implements Graph
 		if (v == null)
 			return null;
 		for (int i=1; i<maxNVertex; i++)
-			if (graph[findVertex(v)][1] != null)
+			if (graph[findVertex(v)][i] != null)
 				edgees.add(graph[findVertex(v)][i]);
 		return edgees;
 	}
@@ -179,10 +179,9 @@ public class DirectedGraphAdjMatr implements Graph
 			return false;
 		for (int i=0; i<maxNVertex; i++)
 		{
-			if (graph[i][0].equals(v))
-			{
-				return true;
-			}
+			if (graph[i][0] != null)
+				if (graph[i][0].equals(v))
+					return true;
 		}
 		return false;
 	}
@@ -231,7 +230,7 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		for (int i=0; i<maxNVertex; i++)
 		{
-			if (graph[i][0] == null)
+			if (graph[i][0] != null)
 				vertices.add(graph[i][0]);
 		}
 		
@@ -279,14 +278,12 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		//Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
 		if (!containsEdge(sourceVertex, targetVertex))
-			for (Vertex v : getEdgees(sourceVertex))
-			{
-				if (v == null)
+			for (int i=1; i<maxNVertex; i++)
+				if(graph[findVertex(sourceVertex)][i] == null)
 				{
-					v = targetVertex;
+					graph[findVertex(sourceVertex)][i] = targetVertex;
 					return new EdgeImpl(sourceVertex, targetVertex, this);
 				}
-			}
 		
 		return null;
 	}
@@ -313,10 +310,8 @@ public class DirectedGraphAdjMatr implements Graph
 		
 		//If the graph contains an edge from source to target, returns true. Does not consider edge weight.		
 		for (Vertex v : getEdgees(sourceVertex))
-		{
-			if (v.equals(targetVertex))
+			if (v == targetVertex)
 				return true;
-		}
 		
 		return false;
 	}
@@ -392,13 +387,13 @@ public class DirectedGraphAdjMatr implements Graph
 			for (int i=0; i<maxNVertex; i++)
 			{
 				//Doesn't consider itself
-				if (graph[i][0].getLabel().equals(vertex.getLabel()))
+				if (graph[i][0] == vertex)
 					continue;
 				
 				//Increments the counter if the given vertex is present in the Adj list
 				for (int k=1; k<maxNVertex; k++)
 				{
-					if (graph[i][k].getLabel().equals(vertex.getLabel()))
+					if (graph[i][k] == vertex)
 						inCount++;
 				}
 			}
@@ -429,8 +424,7 @@ public class DirectedGraphAdjMatr implements Graph
 	public int outDegreeOf(Vertex vertex)
 	{
 		if (isDirected)
-			// return ListStructuresFunctions.getAdjListIfExists(vertex, graph).size(); TODO: controllare che la righa seguente conti solo i collegamenti con il vertice
-			return graph[findVertex(vertex)].length - 1;
+			return getEdgees(vertex).size();
 		else
 			throw new UnsupportedOperationException();
 	}
