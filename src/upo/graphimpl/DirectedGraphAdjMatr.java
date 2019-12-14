@@ -47,17 +47,17 @@ public class DirectedGraphAdjMatr implements Graph
 	private LinkedList<Vertex> getHeadVertices()
 	{
 		LinkedList<Vertex> root = new LinkedList<Vertex>();
-		for (int i=0; i<maxNVertex; i++)
+		for (Vertex v : vertexSet())
 		{
-			boolean x = false;
-			for (int k=1; k<maxNVertex; k++)
-				if (graph[i][k] != null)
-					x = true;
-			if (inDegreeOf(graph[i][0]) == 0 && x)
-				root.add(graph[i][0]);
+			if (inDegreeOf(v) == 0 && v != null)
+				root.add(v);
 		}
 		if (root.isEmpty())
-			root.add(graph[0][0]);
+			for (Vertex v : vertexSet())
+			{
+				root.add(v);
+				return root;
+			}
 		return root;
 	}
 	//TODO: jdoc ritorna il ciclo o null
