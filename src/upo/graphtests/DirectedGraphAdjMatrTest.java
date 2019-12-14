@@ -424,6 +424,6 @@ public class DirectedGraphAdjMatrTest
 
 		assertNotNull(graph.stronglyConnectedComponents());
 
-		assertEquals("{{C,B,A},{E},{D}}", graph.toStringSCC());
+		assertEquals("{{A,C,B},{E},{D}}", graph.toStringSCC());
 	}
 }
