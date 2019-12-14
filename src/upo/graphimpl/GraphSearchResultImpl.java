@@ -146,7 +146,15 @@ public class GraphSearchResultImpl implements GraphSearchResult {
         return distance(source, v, 1);
     }
 
-    // TODO: java doc
+    /**
+     * Returns the distance between current and find.
+     * Otherwise it returns 0.
+     * 
+     * @param current
+     * @param find
+     * @param currentDistance
+     * @return distance between current and find
+     */
     private int distance(Vertex current, Vertex find, int currentDistance) {
         currentDistance++;
         List<Vertex> neighbors = tree.get(current);

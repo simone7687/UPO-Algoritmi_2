@@ -16,8 +16,9 @@ import upo.graph.SearchType;
 import upo.graph.Vertex;
 
 /**
- * @author Luca Piovesan
- *
+ * Implements Graph that extends an iterable through Matrices
+ * 
+ * @author Simone Massaro
  */
 public class DirectedGraphAdjMatr implements Graph {
     private final int maxNVertex = 100;
@@ -36,12 +37,18 @@ public class DirectedGraphAdjMatr implements Graph {
         visitedNodes = new Colors[maxNVertex];
     }
 
-    //TODO: javadoc
+    /**
+     * @return the number of vertices of the graph.
+     */
     private int getVerticesNumber() {
         return vertexSet().size();
     }
-
-    //TODO: javadoc
+    /**
+     * Return a list of head vertices of the graph.
+     * If there aren't, returns the first vertex inserted in the graph.
+     * 
+     * @return list of head vertices
+     */
     private LinkedList<Vertex> getHeadVertices() {
         LinkedList<Vertex> root = new LinkedList<Vertex>();
         for (Vertex v : vertexSet())
@@ -56,8 +63,14 @@ public class DirectedGraphAdjMatr implements Graph {
             }
         return root;
     }
-
-    //TODO: jdoc ritorna il ciclo o null
+    /**
+     * Find the shortest path from current to find.
+     * Returns null if it does not exist.
+     * 
+     * @param current
+     * @param find
+     * @return the list of vertices of the route
+     */
     private Collection<Vertex> checkCicle(Vertex current, Vertex find) {
         Collection<Vertex> currentComponents = new LinkedList<Vertex>();
         Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
@@ -80,19 +93,29 @@ public class DirectedGraphAdjMatr implements Graph {
             }
         return components;
     }
-
-    //TODO: javadoc: Initializes the visited nodes to 'not visited'
+    /**
+     * Initializes the variable visitedNodes to 'not visited'.
+     */
     private void setNotVisitedNodes() {
         for (int i = 0; i < maxNVertex; i++)
             visitedNodes[i] = Colors.WHITE;
     }
-
-    //TODO: javadoc
+    /**
+     * Change the value of the vertex v in the variable visitedNodes with color.
+     * 
+     * @param v
+     * @param color
+     */
     private void setColorVertextVisitedNodes(Vertex v, Colors color) {
         visitedNodes[findVertex(v)] = color;
     }
-
-    //TODO: javadoc
+    /**
+     * Returns the position of v in the graph.
+     * if v is null returns 0.
+     * 
+     * @param v
+     * @return the position of v
+     */
     private int findVertex(Vertex v) {
         // If the vertex is null or does not exist in the graph, returns false
         if (v == null)
@@ -104,8 +127,13 @@ public class DirectedGraphAdjMatr implements Graph {
         }
         return 0;
     }
-
-    //TODO: javadoc
+    /**
+     * returns the list of Edgees of v.
+     * if v is null returns null.
+     * 
+     * @param v
+     * @return
+     */
     private Collection<Vertex> getEdgees(Vertex v) {
         LinkedList<Vertex> edgees = new LinkedList<Vertex>();
         // If the vertex is null or does not exist in the graph, returns false

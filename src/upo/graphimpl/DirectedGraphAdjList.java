@@ -20,12 +20,10 @@ import upo.graph.SearchType;
 import upo.graph.Vertex;
 
 /**
- * @author Luca Piovesan
- *
+ * Implements Graph that extends an iterable through List
+ * 
+ * @author Simone Massaro
  */
-
-
-// Implements Graph that extends an iterable
 public class DirectedGraphAdjList implements Graph {
     private LinkedHashMap<Vertex, LinkedList<Vertex>> graph;
     private HashMap<Vertex, Colors> visitedNodes;
@@ -41,12 +39,18 @@ public class DirectedGraphAdjList implements Graph {
         visitedNodes = new HashMap<>();
     }
 
-    //TODO: javadoc
+    /**
+     * @return the number of vertices of the graph.
+     */
     private int getVerticesNumber() {
         return graph.keySet().size();
     }
-
-    //TODO: javadoc
+    /**
+     * Return a list of head vertices of the graph.
+     * If there aren't, returns the first vertex inserted in the graph.
+     * 
+     * @return list of head vertices
+     */
     private LinkedList<Vertex> getHeadVertices() {
         LinkedList<Vertex> root = new LinkedList<Vertex>();
         for (Vertex v : graph.keySet())
@@ -56,8 +60,14 @@ public class DirectedGraphAdjList implements Graph {
             root.add(graph.keySet().stream().findFirst().orElse(null));
         return root;
     }
-
-    //TODO: jdoc ritorna il ciclo o null
+    /**
+     * Find the shortest path from current to find.
+     * Returns null if it does not exist.
+     * 
+     * @param current
+     * @param find
+     * @return the list of vertices of the route
+     */
     private Collection<Vertex> checkCicle(Vertex current, Vertex find) {
         Collection<Vertex> currentComponents = new LinkedList<Vertex>();
         Collection<Vertex> neighborComponents = new LinkedList<Vertex>();
@@ -80,15 +90,20 @@ public class DirectedGraphAdjList implements Graph {
             }
         return components;
     }
-
-    //TODO: javadoc: Initializes the visited nodes to 'not visited'
+    /**
+     * Initializes the variable visitedNodes to 'not visited'.
+     */
     private void setNotVisitedNodes() {
         visitedNodes.clear();
         for (Vertex v : graph.keySet())
             visitedNodes.put(v, Colors.WHITE);
     }
-
-    //TODO: javadoc
+    /**
+     * Change the value of the vertex v in the variable visitedNodes with color.
+     * 
+     * @param v
+     * @param color
+     */
     private void setColorVertextVisitedNodes(Vertex v, Colors color) {
         visitedNodes.put(ListStructuresFunctions.getKeyAsVertex(v, graph), color);
     }
@@ -418,7 +433,6 @@ public class DirectedGraphAdjList implements Graph {
 
         return null;
     }
-
 
     /**
      * Returns the weight assigned to a given edge. Unweighted graphs return 1.0 (as
