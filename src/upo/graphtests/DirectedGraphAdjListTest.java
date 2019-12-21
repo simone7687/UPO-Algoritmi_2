@@ -1,7 +1,6 @@
 package upo.graphtests;
 
 import org.junit.Test;
-import upo.graph.Edge;
 import upo.graph.GraphSearchResult;
 import upo.graphimpl.DirectedGraphAdjList;
 import upo.graphimpl.VertexImpl;
@@ -136,7 +135,7 @@ public class DirectedGraphAdjListTest {
         VertexImpl v1 = new VertexImpl("B");
         graph.addVertex(v1);
 
-        Edge res = graph.addEdge(v0, v1);//TODO:
+        graph.addEdge(v0, v1);//TODO:
         assertFalse(graph.containsEdge(new VertexImpl("F"), v0));
         assertFalse(graph.containsEdge(v0, new VertexImpl("F")));
 
