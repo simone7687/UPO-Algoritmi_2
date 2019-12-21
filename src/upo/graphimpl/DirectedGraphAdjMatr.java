@@ -47,7 +47,6 @@ public class DirectedGraphAdjMatr implements Graph {
         for (Vertex v : vertexSet())
             if (inDegreeOf(v) == 0 && v != null) {
                 root.add(v);
-                System.out.println(v.getLabel());
             }
         if (root.isEmpty())
             for (Vertex v : vertexSet()) {
