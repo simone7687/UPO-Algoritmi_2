@@ -294,10 +294,13 @@ public class DirectedGraphAdjMatrTest {
         assertNotNull(graph.addEdge(v2, v3));
 
         GraphSearchResult treeBFS = graph.visit(BFS);
-        assertEquals(2.0, treeBFS.getDistance(v3), 0);
+        assertEquals(1.0, treeBFS.getDistance(v1), 0);
+        assertEquals(1, treeBFS.getStartTime(v0));
+        assertEquals(3, treeBFS.getStartTime(v2));
+        assertEquals(1, treeBFS.getEndTime(v2));
 
         GraphSearchResult treeDFS_TOT = graph.visit(DFS_TOT);
-        //TODO:...
+        assertEquals(3, treeDFS_TOT.getStartTime(v2));
     }
 
     @Test
