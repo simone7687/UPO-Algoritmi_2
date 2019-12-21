@@ -1,9 +1,9 @@
 package upo.graphimpl;
 
-import java.util.Iterator;
-
 import upo.graph.Graph;
 import upo.graph.Vertex;
+
+import java.util.Iterator;
 
 public class VertexImpl extends Vertex {
     public VertexImpl(String label) {

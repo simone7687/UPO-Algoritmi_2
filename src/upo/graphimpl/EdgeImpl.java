@@ -1,12 +1,12 @@
 package upo.graphimpl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import upo.graph.DirectedEdge;
 import upo.graph.Graph;
 import upo.graph.GraphSearchResult;
 import upo.graph.Vertex;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class EdgeImpl implements DirectedEdge {
     private double edgeWeight;

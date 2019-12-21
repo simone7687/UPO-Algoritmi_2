@@ -3,28 +3,20 @@
  */
 package upo.graphimpl;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import upo.graph.*;
 
-import upo.graph.Edge;
-import upo.graph.Graph;
-import upo.graph.GraphSearchResult;
-import upo.graph.SearchType;
-import upo.graph.Vertex;
+import java.util.*;
 
 /**
  * Implements Graph that extends an iterable through Matrices
- * 
+ *
  * @author Simone Massaro
  */
 public class DirectedGraphAdjMatr implements Graph {
     private final int maxNVertex = 100;
 
-    private Vertex graph[][];
-    private Colors visitedNodes[];
+    private Vertex[][] graph;
+    private Colors[] visitedNodes;
     private final boolean isDirected = true;
 
     /**
@@ -43,10 +35,11 @@ public class DirectedGraphAdjMatr implements Graph {
     private int getVerticesNumber() {
         return vertexSet().size();
     }
+
     /**
      * Return a list of head vertices of the graph.
      * If there aren't, returns the first vertex inserted in the graph.
-     * 
+     *
      * @return list of head vertices
      */
     private LinkedList<Vertex> getHeadVertices() {
@@ -63,10 +56,11 @@ public class DirectedGraphAdjMatr implements Graph {
             }
         return root;
     }
+
     /**
      * Find the shortest path from current to find.
      * Returns null if it does not exist.
-     * 
+     *
      * @param current
      * @param find
      * @return the list of vertices of the route
@@ -93,6 +87,7 @@ public class DirectedGraphAdjMatr implements Graph {
             }
         return components;
     }
+
     /**
      * Initializes the variable visitedNodes to 'not visited'.
      */
@@ -100,19 +95,21 @@ public class DirectedGraphAdjMatr implements Graph {
         for (int i = 0; i < maxNVertex; i++)
             visitedNodes[i] = Colors.WHITE;
     }
+
     /**
      * Change the value of the vertex v in the variable visitedNodes with color.
-     * 
+     *
      * @param v
      * @param color
      */
     private void setColorVertextVisitedNodes(Vertex v, Colors color) {
         visitedNodes[findVertex(v)] = color;
     }
+
     /**
      * Returns the position of v in the graph.
      * if v is null returns 0.
-     * 
+     *
      * @param v
      * @return the position of v
      */
@@ -127,10 +124,11 @@ public class DirectedGraphAdjMatr implements Graph {
         }
         return 0;
     }
+
     /**
      * returns the list of Edgees of v.
      * if v is null returns null.
-     * 
+     *
      * @param v
      * @return
      */
@@ -620,10 +618,7 @@ public class DirectedGraphAdjMatr implements Graph {
      */
     @Override
     public boolean isDAG() {
-        if (!isCyclic() && isDirected)
-            return true;
-
-        return false;
+        return !isCyclic() && isDirected;
     }
 
     /**
@@ -713,7 +708,7 @@ public class DirectedGraphAdjMatr implements Graph {
             throw new UnsupportedOperationException("The current graoh is not directed.");
 
         Collection<Collection<Vertex>> components = stronglyConnectedComponents();
-        String ren = new String();
+        String ren = "";
         boolean k = false, i = false;
 
         ren += "{";

@@ -1,15 +1,15 @@
 package upo.graphtests;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static upo.graph.SearchType.*;
-
 import org.junit.Test;
-
 import upo.graph.Edge;
 import upo.graph.GraphSearchResult;
 import upo.graphimpl.DirectedGraphAdjMatr;
 import upo.graphimpl.VertexImpl;
+
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static upo.graph.SearchType.BFS;
+import static upo.graph.SearchType.DFS_TOT;
 
 public class DirectedGraphAdjMatrTest {
     private DirectedGraphAdjMatr graph;
@@ -375,7 +375,7 @@ public class DirectedGraphAdjMatrTest {
         assertNotNull(graph.addEdge(v4, v0));
         assertNotNull(graph.addEdge(v0, v5));
 
-        VertexImpl a[] = {v4, v0, v1, v2, v5, v3};
+        VertexImpl[] a = {v4, v0, v1, v2, v5, v3};
 
         assertArrayEquals(a, graph.topologicalSort());
     }

@@ -1,15 +1,11 @@
 package upo.graphimpl;
 
+import upo.graph.*;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import upo.graph.Edge;
-import upo.graph.Graph;
-import upo.graph.GraphSearchResult;
-import upo.graph.SearchType;
-import upo.graph.Vertex;
 
 public class GraphSearchResultImpl implements GraphSearchResult {
     private SearchType type;
@@ -38,16 +34,16 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             return true;
         }
     }
+
     private boolean keyExists(Vertex l) {
         return tree.keySet().stream().anyMatch(x -> x.getLabel().equals(l.getLabel()));
     }
+
     public boolean containsLeaves(Vertex l) {
         // If the leaf is null or does not exist in the graph, returns false
-        if (l == null || !keyExists(l))
-            return false;
-
-        return true;
+        return l != null && keyExists(l);
     }
+
     public Edge addEdge(Vertex sourceLeaf, Vertex targetLeaf) {
         //If any of the specified vertex are null, throws NullPointerException
         if (sourceLeaf == null || targetLeaf == null)
@@ -67,6 +63,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
 
         return null;
     }
+
     public boolean containsEdge(Vertex sourceLeaf, Vertex targetLeaf) {
         //Returns false if any of the specified vertex does not exist in the current graph
         if (!containsLeaves(sourceLeaf) || !containsLeaves(targetLeaf))
@@ -79,7 +76,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
 
         return false;
     }
-    
+
     @Override
     public Iterator<Vertex> iterator() {
         return graph.iterator();
@@ -138,7 +135,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     /**
      * Returns the distance between current and find.
      * Otherwise it returns 0.
-     * 
+     *
      * @param current
      * @param find
      * @param currentDistance

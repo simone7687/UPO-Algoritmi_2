@@ -1,9 +1,9 @@
 package upo.graphimpl;
 
+import upo.graph.Vertex;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
-import upo.graph.Vertex;
 
 public class ListStructuresFunctions {
     /**

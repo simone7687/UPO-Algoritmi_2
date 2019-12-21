@@ -3,25 +3,13 @@
  */
 package upo.graphimpl;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Set;
+import upo.graph.*;
 
-import java.lang.UnsupportedOperationException;
-
-import upo.graph.Edge;
-import upo.graph.Graph;
-import upo.graph.GraphSearchResult;
-import upo.graph.SearchType;
-import upo.graph.Vertex;
+import java.util.*;
 
 /**
  * Implements Graph that extends an iterable through List
- * 
+ *
  * @author Simone Massaro
  */
 public class DirectedGraphAdjList implements Graph {
@@ -45,10 +33,11 @@ public class DirectedGraphAdjList implements Graph {
     private int getVerticesNumber() {
         return graph.keySet().size();
     }
+
     /**
      * Return a list of head vertices of the graph.
      * If there aren't, returns the first vertex inserted in the graph.
-     * 
+     *
      * @return list of head vertices
      */
     private LinkedList<Vertex> getHeadVertices() {
@@ -60,10 +49,11 @@ public class DirectedGraphAdjList implements Graph {
             root.add(graph.keySet().stream().findFirst().orElse(null));
         return root;
     }
+
     /**
      * Find the shortest path from current to find.
      * Returns null if it does not exist.
-     * 
+     *
      * @param current
      * @param find
      * @return the list of vertices of the route
@@ -90,6 +80,7 @@ public class DirectedGraphAdjList implements Graph {
             }
         return components;
     }
+
     /**
      * Initializes the variable visitedNodes to 'not visited'.
      */
@@ -98,9 +89,10 @@ public class DirectedGraphAdjList implements Graph {
         for (Vertex v : graph.keySet())
             visitedNodes.put(v, Colors.WHITE);
     }
+
     /**
      * Change the value of the vertex v in the variable visitedNodes with color.
-     * 
+     *
      * @param v
      * @param color
      */
@@ -160,10 +152,7 @@ public class DirectedGraphAdjList implements Graph {
     @Override
     public boolean containsVertex(Vertex v) {
         // If the vertex is null or does not exist in the graph, returns false
-        if (v == null || !ListStructuresFunctions.keyExists(v, graph))
-            return false;
-
-        return true;
+        return v != null && ListStructuresFunctions.keyExists(v, graph);
     }
 
     /**
@@ -576,10 +565,7 @@ public class DirectedGraphAdjList implements Graph {
      */
     @Override
     public boolean isDAG() {
-        if (!isCyclic() && isDirected)
-            return true;
-
-        return false;
+        return !isCyclic() && isDirected;
     }
 
     /**
@@ -669,7 +655,7 @@ public class DirectedGraphAdjList implements Graph {
             throw new UnsupportedOperationException("The current graoh is not directed.");
 
         Collection<Collection<Vertex>> components = stronglyConnectedComponents();
-        String ren = new String();
+        String ren = "";
         boolean k = false, i = false;
 
         ren += "{";
