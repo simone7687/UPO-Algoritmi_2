@@ -82,7 +82,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     
     @Override
     public Iterator<Vertex> iterator() {
-        return null;        //TODO: forse graph.iterator();
+        return graph.iterator();
     }
 
     /**
@@ -195,10 +195,48 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     public int getStartTime(Vertex v) throws IllegalArgumentException {
         if (!graph.containsVertex(v))
             throw new IllegalArgumentException("The vertex is not contained in the visited graph");
+        if (v.equals(source))
+            return 1;
+        int count = 1;
+        switch (type) {
+            case BFS:
+                LinkedList<Vertex> queue = new LinkedList<Vertex>();
+                queue.add(source);
+                while (!queue.isEmpty()) {
+                    Vertex current = queue.element();
+                    for (Vertex neighbor : tree.get(current)) {
+                        count++;
+                        if (v == neighbor)
+                            return count;
+                        queue.add(neighbor);
+                    }
+                    queue.remove(0);
+                }
+            case DFS_TOT:
+                DFSv = 0;
+                DFSStartTime(source, v, 2);
+                if (DFSv != 0)
+                    return DFSv;
+            default:
+                return -1;
+        }
+    }
 
-        //TODO: return Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato scoperto nella visita corrente (ovvero, quando v è diventato grigio).
+    private int DFSv = 0;
 
-        return -1;
+    private int DFSStartTime(Vertex current, Vertex find, int count) {
+        if (current.equals(find))
+            return count;
+        for (Vertex neighbor : tree.get(current)) {
+            count++;
+            if (containsEdge(neighbor, find)) {
+                if (DFSv == 0)
+                    DFSv = count;
+                return count;
+            }
+            count = DFSStartTime(neighbor, find, count);
+        }
+        return count;
     }
 
     /**
@@ -215,10 +253,9 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     public int getEndTime(Vertex v) throws IllegalArgumentException {
         if (!graph.containsVertex(v))
             throw new IllegalArgumentException("The vertex is not contained in the visited graph");
-
-        //TODO: Restituisce il tempo di visita (dove la prima volta è 1) in cui il vertice di destinazione v è stato chiuso nella visita corrente (cioè quando v è diventato nero).
-
-        return -1;
+        if (v == null)
+            return -1;
+        return tree.size() - getStartTime(v);
     }
 
     /**
@@ -237,7 +274,6 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             throw new IllegalArgumentException("The vertex is not contained in the visited graph");
 
         if (containsEdge(v1, v2)) {
-            //TODO: non sono sicuro che il peso sia uguale sia per graph che per tree
             return graph.getEdgeWeight(v1, v2);
         } else {
             throw new IllegalArgumentException("Does not exist the edge between v1 and v2");
