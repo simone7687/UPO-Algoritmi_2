@@ -6,20 +6,21 @@ import upo.graph.Vertex;
 import java.util.Iterator;
 
 public class VertexImpl extends Vertex {
-    public VertexImpl(String label) {
+    private Graph graph;
+
+    public VertexImpl(String label, Graph graph) {
         super(label);
+        this.graph = graph;
     }
 
     @Override
     public Iterator<Vertex> iterator() {
-        // TODO
-        return null;
+        return graph.iterator();
     }
 
     @Override
     public Graph getGraph() {
-        // TODO
-        return null;
+        return graph;
     }
 
 }
