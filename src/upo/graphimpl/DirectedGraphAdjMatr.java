@@ -21,8 +21,6 @@ public class DirectedGraphAdjMatr implements Graph {
 
     /**
      * Initializes the graph
-     *
-     * @param isDirected Indicates if the graph is directed
      */
     public DirectedGraphAdjMatr() {
         graph = new Vertex[maxNVertex][maxNVertex];
@@ -632,7 +630,7 @@ public class DirectedGraphAdjMatr implements Graph {
         if (!isDAG())
             throw new UnsupportedOperationException("The current graph is not a DAG.");
         setNotVisitedNodes();
-        LinkedList<Vertex> queue = new LinkedList<Vertex>();
+        LinkedList<Vertex> queue = new LinkedList<>();
         Vertex[] topologicalSortVertexs = new Vertex[getVerticesNumber()];
         int i = 0;
         //Adds the root to the queue and sets it as gray

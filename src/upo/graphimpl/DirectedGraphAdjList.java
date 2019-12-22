@@ -19,8 +19,6 @@ public class DirectedGraphAdjList implements Graph {
 
     /**
      * Initializes the graph
-     *
-     * @param isDirected Indicates if the graph is directed
      */
     public DirectedGraphAdjList() {
         graph = new LinkedHashMap<>();
