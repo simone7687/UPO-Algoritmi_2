@@ -169,7 +169,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             return null;
 
         for (Vertex x : tree.keySet()) {
-            if (tree.get(x).getFirst() == v) ;
+            if (tree.get(x).getFirst() == v)
             {
                 return x;
             }
