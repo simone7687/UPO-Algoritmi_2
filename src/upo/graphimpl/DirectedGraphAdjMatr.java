@@ -300,13 +300,12 @@ public class DirectedGraphAdjMatr implements Graph {
 
         //Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
         if (!containsEdge(sourceVertex, targetVertex))
-        for (int i = 1; i < maxNVertex; i++)
-            if (edgees[i] == null)
-            {
-                EdgeImpl e = new EdgeImpl(sourceVertex, targetVertex, this);
-                edgees[i] = e;
-                return e;
-            }
+            for (int i = 1; i < maxNVertex; i++)
+                if (edgees[i] == null) {
+                    EdgeImpl e = new EdgeImpl(sourceVertex, targetVertex, this);
+                    edgees[i] = e;
+                    return e;
+                }
 
         return null;
     }

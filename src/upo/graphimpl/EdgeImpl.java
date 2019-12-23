@@ -70,6 +70,7 @@ public class EdgeImpl implements DirectedEdge {
         this.targetVertex = targetVertex;
         this.tree = tree;
     }
+
     //TODO:javadoc
     public void setEdgeWeight(double edgeWeight) {
         this.edgeWeight = edgeWeight;
@@ -98,6 +99,7 @@ public class EdgeImpl implements DirectedEdge {
         vertices.add(targetVertex);
         return vertices;
     }
+
     //TODO: java dock
     @Override
     public Graph getGraph() {
