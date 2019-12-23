@@ -13,7 +13,7 @@ import java.util.*;
  * @author Simone Massaro
  */
 public class DirectedGraphAdjMatr implements Graph {
-    private final int maxNVertex = 100;
+    protected final int maxNVertex = 100;
 
     protected Vertex[] graph;
     protected Colors[] visitedNodes;
@@ -302,7 +302,7 @@ public class DirectedGraphAdjMatr implements Graph {
         if (!containsEdge(sourceVertex, targetVertex))
             for (int i = 1; i < maxNVertex; i++)
                 if (edgees[i] == null) {
-                    EdgeImpl e = new EdgeImpl(sourceVertex, targetVertex, this);
+                    EdgeImpl e = new EdgeImpl(sourceVertex, targetVertex, DEFAULT_EDGE_WEIGHT, this);
                     edgees[i] = e;
                     return e;
                 }
@@ -492,9 +492,13 @@ public class DirectedGraphAdjMatr implements Graph {
         //Returns 0 if any of the specified vertex does not exist in the current graph
         if (!containsVertex(sourceVertex) || !containsVertex(targetVertex))
             return 0;
-
-        //Unweighted graph
-        return DEFAULT_EDGE_WEIGHT;
+        if (!containsEdge(sourceVertex, targetVertex))
+            return 0;
+        for (EdgeImpl e : edgees)
+            if (e != null)
+                if (e.getSource().equals(sourceVertex) && e.getTarget().equals(targetVertex))
+                    return e.getEdgeWeight();
+        return 0;
     }
 
     /**
@@ -611,7 +615,7 @@ public class DirectedGraphAdjMatr implements Graph {
     public boolean isCyclic() {
         for (int i = 0; i < maxNVertex; i++) {
             setNotVisitedNodes();
-            if (!(checkCicle(graph[i], graph[i]).isEmpty()))    //ERRORE
+            if (!(checkCicle(graph[i], graph[i]).isEmpty()))
                 return true;
         }
         return false;
