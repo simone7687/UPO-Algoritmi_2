@@ -55,7 +55,7 @@ public class EdgeImpl implements DirectedEdge {
         this.sourceVertex = sourceVertex;
         this.targetVertex = targetVertex;
         this.edgeWeight = edgeWeight;
-        this.graph = graph;
+        this.tree = tree;
     }
 
     /**
