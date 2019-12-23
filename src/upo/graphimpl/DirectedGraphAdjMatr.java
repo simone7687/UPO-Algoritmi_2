@@ -15,16 +15,18 @@ import java.util.*;
 public class DirectedGraphAdjMatr implements Graph {
     private final int maxNVertex = 100;
 
-    private Vertex[][] graph;
-    private Colors[] visitedNodes;
+    protected Vertex[] graph;
+    protected Colors[] visitedNodes;
+    protected EdgeImpl[] edgees;
     private final boolean isDirected = true;
 
     /**
      * Initializes the graph
      */
     public DirectedGraphAdjMatr() {
-        graph = new Vertex[maxNVertex][maxNVertex];
+        graph = new Vertex[maxNVertex];
         visitedNodes = new Colors[maxNVertex];
+        edgees = new EdgeImpl[maxNVertex];
     }
 
     /**
@@ -40,7 +42,7 @@ public class DirectedGraphAdjMatr implements Graph {
      *
      * @return list of head vertices
      */
-    private LinkedList<Vertex> getHeadVertices() {
+    protected LinkedList<Vertex> getHeadVertices() {
         LinkedList<Vertex> root = new LinkedList<Vertex>();
         for (Vertex v : vertexSet())
             if (inDegreeOf(v) == 0 && v != null) {
@@ -88,7 +90,7 @@ public class DirectedGraphAdjMatr implements Graph {
     /**
      * Initializes the variable visitedNodes to 'not visited'.
      */
-    private void setNotVisitedNodes() {
+    protected void setNotVisitedNodes() {
         for (int i = 0; i < maxNVertex; i++)
             visitedNodes[i] = Colors.WHITE;
     }
@@ -115,7 +117,7 @@ public class DirectedGraphAdjMatr implements Graph {
         if (v == null)
             return 0;
         for (int i = 0; i < maxNVertex; i++) {
-            if (graph[i][0].equals(v)) {
+            if (graph[i].equals(v)) {
                 return i + 1;
             }
         }
@@ -130,19 +132,20 @@ public class DirectedGraphAdjMatr implements Graph {
      * @return
      */
     private Collection<Vertex> getEdgees(Vertex v) {
-        LinkedList<Vertex> edgees = new LinkedList<Vertex>();
+        LinkedList<Vertex> edgeesList = new LinkedList<Vertex>();
         // If the vertex is null or does not exist in the graph, returns false
         if (v == null)
             return null;
-        for (int i = 1; i < maxNVertex; i++)
-            if (graph[findVertex(v)][i] != null)
-                edgees.add(graph[findVertex(v)][i]);
-        return edgees;
+        for (EdgeImpl e : edgees)
+            if (e != null)
+                if (e.getSource() == v)
+                    edgeesList.add(e.getTarget());
+        return edgeesList;
     }
 
     @Override
     public Iterator<Vertex> iterator() {
-        return graph[0][0].iterator();
+        return graph[0].iterator();
     }
 
     /**
@@ -174,8 +177,8 @@ public class DirectedGraphAdjMatr implements Graph {
         else {
             //Adds the vertex and initializes an empty list
             for (int i = 0; i < maxNVertex; i++) {
-                if (graph[i][0] == null) {
-                    graph[i][0] = v;
+                if (graph[i] == null) {
+                    graph[i] = v;
                     return true;
                 }
             }
@@ -199,8 +202,8 @@ public class DirectedGraphAdjMatr implements Graph {
         if (v == null)
             return false;
         for (int i = 0; i < maxNVertex; i++) {
-            if (graph[i][0] != null)
-                if (graph[i][0].equals(v))
+            if (graph[i] != null)
+                if (graph[i].equals(v))
                     return true;
         }
         return false;
@@ -231,8 +234,11 @@ public class DirectedGraphAdjMatr implements Graph {
         if (v == null || !containsVertex(v))
             return false;
 
+        graph[findVertex(v)] = null;
         for (int i = 0; i < maxNVertex; i++)
-            graph[findVertex(v)][i] = null;
+            if (edgees[i] != null)
+                if (edgees[i].getSource().equals(v) || edgees[i].getTarget().equals(v))
+                    edgees[i] = null;
         return true;
     }
 
@@ -247,8 +253,8 @@ public class DirectedGraphAdjMatr implements Graph {
         Set<Vertex> vertices = new HashSet<Vertex>();
 
         for (int i = 0; i < maxNVertex; i++) {
-            if (graph[i][0] != null)
-                vertices.add(graph[i][0]);
+            if (graph[i] != null)
+                vertices.add(graph[i]);
         }
 
         return vertices;
@@ -294,11 +300,13 @@ public class DirectedGraphAdjMatr implements Graph {
 
         //Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
         if (!containsEdge(sourceVertex, targetVertex))
-            for (int i = 1; i < maxNVertex; i++)
-                if (graph[findVertex(sourceVertex)][i] == null) {
-                    graph[findVertex(sourceVertex)][i] = targetVertex;
-                    return new EdgeImpl(sourceVertex, targetVertex, this);
-                }
+        for (int i = 1; i < maxNVertex; i++)
+            if (edgees[i] == null)
+            {
+                EdgeImpl e = new EdgeImpl(sourceVertex, targetVertex, this);
+                edgees[i] = e;
+                return e;
+            }
 
         return null;
     }
@@ -323,9 +331,10 @@ public class DirectedGraphAdjMatr implements Graph {
             return false;
 
         //If the graph contains an edge from source to target, returns true. Does not consider edge weight.
-        for (Vertex v : getEdgees(sourceVertex))
-            if (v == targetVertex)
-                return true;
+        for (int i = 0; i < maxNVertex; i++)
+            if (edgees[i] != null)
+                if (edgees[i].getTarget() == targetVertex && edgees[i].getSource() == sourceVertex)
+                    return true;
 
         return false;
     }
@@ -341,10 +350,10 @@ public class DirectedGraphAdjMatr implements Graph {
         Set<Edge> edges = new HashSet<Edge>();
 
         for (int i = 0; i < maxNVertex; i++)
-            if (graph[i][0] != null)
-                for (Vertex v : getEdgees(graph[i][0]))
+            if (graph[i] != null)
+                for (Vertex v : getEdgees(graph[i]))
                     if (v != null)
-                        edges.add(new EdgeImpl(graph[i][0], v, this));
+                        edges.add(new EdgeImpl(graph[i], v, this));
 
         return edges;
     }
@@ -459,8 +468,8 @@ public class DirectedGraphAdjMatr implements Graph {
         //Finds the edge with sourceVertex and targetVertex and removes it
         if (containsEdge(sourceVertex, targetVertex))
             for (int i = 1; i < maxNVertex; i++) {
-                if (graph[findVertex(sourceVertex)][i].equals(sourceVertex)) {
-                    graph[findVertex(sourceVertex)][i] = null;
+                if (edgees[i].getSource().equals(sourceVertex) || edgees[i].getTarget().equals(targetVertex)) {
+                    edgees[i] = null;
                     return new EdgeImpl(sourceVertex, targetVertex, this);
                 }
             }
@@ -603,7 +612,7 @@ public class DirectedGraphAdjMatr implements Graph {
     public boolean isCyclic() {
         for (int i = 0; i < maxNVertex; i++) {
             setNotVisitedNodes();
-            if (!(checkCicle(graph[i][0], graph[i][0]).isEmpty()))    //ERRORE
+            if (!(checkCicle(graph[i], graph[i]).isEmpty()))    //ERRORE
                 return true;
         }
         return false;
