@@ -15,7 +15,14 @@ public class EdgeImpl implements DirectedEdge {
     private Graph graph;
     GraphSearchResult tree;
 
-    //Constructor that initializes vertices, adds the vertices and sets the edge weight value
+    /**
+     * Constructor that initializes vertices, adds the vertices and sets the edge weight value
+     *
+     * @param sourceVertex
+     * @param targetVertex
+     * @param edgeWeight
+     * @param graph
+     */
     public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, double edgeWeight, Graph graph) {
         this.sourceVertex = sourceVertex;
         this.targetVertex = targetVertex;
@@ -23,20 +30,47 @@ public class EdgeImpl implements DirectedEdge {
         this.graph = graph;
     }
 
-    //Constructor that initializes vertices, adds the vertices
+    /**
+     * Constructor that initializes vertices, adds the vertices
+     *
+     * @param sourceVertex
+     * @param targetVertex
+     * @param graph
+     */
     public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, Graph graph) {
         this.sourceVertex = sourceVertex;
         this.targetVertex = targetVertex;
         this.graph = graph;
     }
 
-    //Constructor that initializes vertices, adds the vertices
+    /**
+     * Constructor that initializes vertices, adds the vertices and sets the edge weight value
+     *
+     * @param sourceVertex
+     * @param targetVertex
+     * @param edgeWeight
+     * @param tree
+     */
+    public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, double edgeWeight, GraphSearchResult tree) {
+        this.sourceVertex = sourceVertex;
+        this.targetVertex = targetVertex;
+        this.edgeWeight = edgeWeight;
+        this.graph = graph;
+    }
+
+    /**
+     * Constructor that initializes vertices, adds the vertices
+     *
+     * @param sourceVertex
+     * @param targetVertex
+     * @param tree
+     */
     public EdgeImpl(Vertex sourceVertex, Vertex targetVertex, GraphSearchResult tree) {
         this.sourceVertex = sourceVertex;
         this.targetVertex = targetVertex;
         this.tree = tree;
     }
-
+    //TODO:javadoc
     public void setEdgeWeight(double edgeWeight) {
         this.edgeWeight = edgeWeight;
     }
@@ -64,7 +98,7 @@ public class EdgeImpl implements DirectedEdge {
         vertices.add(targetVertex);
         return vertices;
     }
-
+    //TODO: java dock
     @Override
     public Graph getGraph() {
         return graph;
