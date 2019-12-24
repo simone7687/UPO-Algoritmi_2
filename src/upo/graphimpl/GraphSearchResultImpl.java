@@ -127,31 +127,29 @@ public class GraphSearchResultImpl implements GraphSearchResult {
 
         if (source.equals(v))
             return 0;
-        if (containsEdge(source, v))
-            return 1;
-        return distance(source, v, 1);
+        return distance(source, v, 0);
     }
 
     /**
      * Returns the distance between current and find.
-     * Otherwise it returns 0.
+     * Otherwise it returns Double.POSITIVE_INFINITY.
      *
      * @param current
      * @param find
      * @param currentDistance
      * @return distance between current and find
      */
-    private int distance(Vertex current, Vertex find, int currentDistance) {
-        currentDistance++;
-        List<Vertex> neighbors = tree.get(current);
-        for (Vertex neighbor : neighbors) {
-            if (containsEdge(neighbor, find))
-                return currentDistance;
-            int ren = distance(neighbor, find, currentDistance);
-            if (ren != 0)
+    private double distance(Vertex current, Vertex find, double currentDistance) {
+        double distance;
+        for (Vertex neighbor : tree.get(current)) {
+            distance = currentDistance + getEdgeWeight(current, neighbor);
+            if (containsEdge(current, find))
+                return distance;
+            double ren = distance(neighbor, find, distance);
+            if (ren != Double.POSITIVE_INFINITY)
                 return ren;
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     /**
