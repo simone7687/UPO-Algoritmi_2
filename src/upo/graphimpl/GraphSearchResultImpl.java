@@ -210,6 +210,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             return 1;
         int count = 1;
         switch (type) {
+            case DIJKSTRA:
             case BFS:
                 LinkedList<Vertex> queue = new LinkedList<Vertex>();
                 queue.add(source);

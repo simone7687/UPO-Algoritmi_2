@@ -307,7 +307,7 @@ public class DirectedWeightedGraphAdjMatrTest {
 
         GraphSearchResult treeDIJKSTRA = graph.visit(DIJKSTRA);
         assertEquals(4.0, treeDIJKSTRA.getDistance(v3), 0);
-        assertEquals(1, treeDIJKSTRA.getStartTime(v5));
+        assertEquals(6, treeDIJKSTRA.getStartTime(v5));
         assertEquals(1, treeDIJKSTRA.getEndTime(v5));
     }
 
