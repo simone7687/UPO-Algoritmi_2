@@ -1,11 +1,13 @@
 package upo.graphtests;
 
 import org.junit.Test;
+import upo.graph.GraphSearchResult;
 import upo.graphimpl.DirectedWeightedGraphAdjMatr;
 import upo.graphimpl.VertexImpl;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static upo.graph.SearchType.DIJKSTRA;
 
 public class DirectedWeightedGraphAdjMatrTest {
     private DirectedWeightedGraphAdjMatr graph;
@@ -285,13 +287,28 @@ public class DirectedWeightedGraphAdjMatrTest {
         VertexImpl v3 = new VertexImpl("D", graph);
         graph.addVertex(v3);
 
-        assertNotNull(graph.addEdge(v0, v1));
-        assertNotNull(graph.addEdge(v0, v2));
-        assertNotNull(graph.addEdge(v1, v2));
-        assertNotNull(graph.addEdge(v1, v3));
-        assertNotNull(graph.addEdge(v2, v3));
+        VertexImpl v4 = new VertexImpl("F", graph);
+        graph.addVertex(v4);
 
-        //TODO:...
+        VertexImpl v5 = new VertexImpl("G", graph);
+        graph.addVertex(v5);
+
+        VertexImpl v6 = new VertexImpl("H", graph);
+        graph.addVertex(v6);
+
+        assertNotNull(graph.addEdge(v0, v1, 2));
+        assertNotNull(graph.addEdge(v0, v4, 6));
+        assertNotNull(graph.addEdge(v1, v2, 1));
+        assertNotNull(graph.addEdge(v2, v3, 1));
+        assertNotNull(graph.addEdge(v2, v6, 3));
+        assertNotNull(graph.addEdge(v4, v3, 7));
+        assertNotNull(graph.addEdge(v4, v5, 3));
+        assertNotNull(graph.addEdge(v5, v6, 3));
+
+        GraphSearchResult treeDIJKSTRA = graph.visit(DIJKSTRA);
+        assertEquals(4.0, treeDIJKSTRA.getDistance(v3), 0);
+        assertEquals(1, treeDIJKSTRA.getStartTime(v5));
+        assertEquals(1, treeDIJKSTRA.getEndTime(v5));
     }
 
     @Test

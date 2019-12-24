@@ -2,6 +2,8 @@ package upo.graphimpl;
 
 import upo.graph.*;
 
+import java.util.LinkedList;
+
 /**
  * TODO: javadoc
  */
@@ -89,7 +91,37 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
             case DFS_TOT:
                 throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");
             case DIJKSTRA:
-                return null;    //TODO:...
+                LinkedList<Vertex> queue = new LinkedList<Vertex>();
+                //Adds the root to the queue and sets it as gray
+                setColorVertextVisitedNodes(root, Colors.GREY);
+                queue.add(root);
+                //Adds the root in the BFS tree
+                tree.addLeaves(root);
+                //While the queue is not empty
+                while (!queue.isEmpty()) {
+                    //Gets the first element from the queue
+                    Vertex current = queue.element();
+                    //Add the vertices connected to it in the queue and in the BFS tree if they are white
+                    for (Vertex neighbor : getEdgees(current)) {
+                        //If the node has not been visited, adds it to the queue
+                        if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE)) {
+                            queue.add(neighbor);
+                            tree.addLeaves(neighbor);
+                            tree.addEdge(current, neighbor);    //TODO: cambiare
+                            setColorVertextVisitedNodes(neighbor, Colors.GREY);
+                        } else if (visitedNodes[findVertex(neighbor)].equals(Colors.GREY)) {
+                            if (tree.getDistance(neighbor) > tree.getDistance(current) + getEdgeWeight(current, neighbor)) {
+                                tree.removeLeaves(neighbor);
+                                tree.addLeaves(neighbor);
+                                tree.addEdge(current, neighbor);    //TODO: cambiare
+                            }
+                        }
+                    }
+                    // delete the first of the queue end set it black
+                    queue.remove(0);
+                    setColorVertextVisitedNodes(current, Colors.BLACK);
+                }
+                return tree;
             default:
                 return null;
         }

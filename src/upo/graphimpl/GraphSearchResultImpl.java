@@ -5,7 +5,6 @@ import upo.graph.*;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 public class GraphSearchResultImpl implements GraphSearchResult {
     private SearchType type;
@@ -62,6 +61,24 @@ public class GraphSearchResultImpl implements GraphSearchResult {
         }
 
         return null;
+    }
+
+    public boolean removeLeaves(Vertex v) {
+        //If the vertex is null or the graph doesn't contain it, returns null
+        //graph.keySet().stream().noneMatch(x -> x.getLabel().equals(v.getLabel()))
+        if (v == null || !containsLeaves(v))
+            return false;
+
+        //Removes the key (aka the vertex)
+        tree.remove(ListStructuresFunctions.getKeyAsVertex(v, tree));
+
+        //For each keys, checks if the LinkedList contains the vertex and if it does, deletes it
+        for (Vertex key : tree.keySet()) {
+            if (ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(v, tree), v))
+                (ListStructuresFunctions.getAdjListIfExists(v, tree)).remove(tree.get(key).stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null));
+        }
+
+        return true;
     }
 
     public boolean containsEdge(Vertex sourceLeaf, Vertex targetLeaf) {

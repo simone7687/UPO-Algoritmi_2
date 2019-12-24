@@ -101,7 +101,7 @@ public class DirectedGraphAdjMatr implements Graph {
      * @param v
      * @param color
      */
-    private void setColorVertextVisitedNodes(Vertex v, Colors color) {
+    protected void setColorVertextVisitedNodes(Vertex v, Colors color) {
         visitedNodes[findVertex(v)] = color;
     }
 
@@ -112,7 +112,7 @@ public class DirectedGraphAdjMatr implements Graph {
      * @param v
      * @return the position of v
      */
-    private int findVertex(Vertex v) {
+    protected int findVertex(Vertex v) {
         // If the vertex is null or does not exist in the graph, returns false
         if (v == null)
             return 0;
@@ -131,7 +131,7 @@ public class DirectedGraphAdjMatr implements Graph {
      * @param v
      * @return
      */
-    private Collection<Vertex> getEdgees(Vertex v) {
+    protected Collection<Vertex> getEdgees(Vertex v) {
         LinkedList<Vertex> edgeesList = new LinkedList<Vertex>();
         // If the vertex is null or does not exist in the graph, returns false
         if (v == null)
