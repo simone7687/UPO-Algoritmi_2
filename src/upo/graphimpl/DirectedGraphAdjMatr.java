@@ -17,7 +17,7 @@ public class DirectedGraphAdjMatr implements Graph {
 
     protected Vertex[] graph;
     protected Colors[] visitedNodes;
-    protected EdgeImpl[] edgees;    // TODO: errore
+    protected EdgeImpl[] edgees;
     private final boolean isDirected = true;
 
     /**

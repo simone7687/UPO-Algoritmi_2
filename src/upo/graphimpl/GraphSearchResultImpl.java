@@ -20,9 +20,6 @@ public class GraphSearchResultImpl implements GraphSearchResult {
         edgees = new LinkedList<>();
     }
 
-    /**
-     * TODO: javadoc
-     */
     private LinkedList<Vertex> getTargetEdge(Vertex v) {
         LinkedList<Vertex> targetEdge = new LinkedList<>();
         for (EdgeImpl e : edgees) {

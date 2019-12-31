@@ -5,7 +5,9 @@ import upo.graph.*;
 import java.util.LinkedList;
 
 /**
- * TODO: javadoc
+ * Implements weighted Graph that extends an iterable through Matrices
+ *
+ * @author Simone Massaro
  */
 public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implements Graph {
     /**
@@ -77,7 +79,15 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
     }
 
     /**
-     * TODO: java doc
+     * Performs a visit (of type <code>type</code>) over the current graph.
+     *
+     * @param type the search type.
+     *
+     * @throws UnsupportedOperationException if the visit cannot be performed on the current graph
+     * (e.g., a Dijkstra visit on an unweighted graph).
+     *
+     * @return a GraphSearchtreeult reptreeenting the treeult of the visit performed.
+     *
      */
     @Override
     public GraphSearchResult visit(SearchType type) throws UnsupportedOperationException {
@@ -141,7 +151,10 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
     }
 
     /**
-     * TODO: javdoc
+     * Calculate the shortest paths between all 
+     * the pairs of vertices, using the Floyd Warshall algorithm
+     * 
+     * @return the shortest paths between all the pairs of vertices
      */
     public double[][] allToAllShortestPaths() {
         double[][] distance = new double[maxNVertex][maxNVertex];
