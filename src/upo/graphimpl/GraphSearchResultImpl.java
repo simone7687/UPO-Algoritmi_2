@@ -3,20 +3,34 @@ package upo.graphimpl;
 import upo.graph.*;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class GraphSearchResultImpl implements GraphSearchResult {
     private SearchType type;
     private Vertex source;
-    private LinkedHashMap<Vertex, LinkedList<Vertex>> tree;
+    private LinkedList<Vertex> tree;
+    private LinkedList<EdgeImpl> edgees;
     private Graph graph;
 
     public GraphSearchResultImpl(SearchType type, Vertex source, Graph graph) {
         this.type = type;
         this.source = source;
         this.graph = graph;
-        tree = new LinkedHashMap<>();
+        tree = new LinkedList<>();
+        edgees = new LinkedList<>();
+    }
+
+    /**
+     * TODO: javadoc
+     */
+    private LinkedList<Vertex> getTargetEdge(Vertex v) {
+        LinkedList<Vertex> targetEdge = new LinkedList<>();
+        for (EdgeImpl e : edgees) {
+            if (e.getSource().equals(v)) {
+                targetEdge.add(e.getTarget());
+            }
+        }
+        return targetEdge;
     }
 
     public boolean addLeaves(Vertex l) {
@@ -29,18 +43,38 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             return false;
         else {
             //Adds the vertex and initializes an empty list
-            tree.put(l, new LinkedList<Vertex>());
+            tree.add(l);
             return true;
         }
     }
 
-    private boolean keyExists(Vertex l) {
-        return tree.keySet().stream().anyMatch(x -> x.getLabel().equals(l.getLabel()));
+    public boolean removeLeaves(Vertex v) {
+        //If the vertex is null or the graph doesn't contain it, returns null
+        if (v == null || !containsLeaves(v))
+            return false;
+
+        //Removes the key (aka the vertex)
+        tree.remove(v);
+
+        //For each keys, checks if the LinkedList contains the vertex and if it does, deletes it
+        for (Vertex key : tree) {
+            if (containsEdge(v, key))
+                removeEdge(v, key);
+            if (containsEdge(key, v))
+                removeEdge(key, v);
+        }
+
+        return true;
     }
 
     public boolean containsLeaves(Vertex l) {
         // If the leaf is null or does not exist in the graph, returns false
-        return l != null && keyExists(l);
+        for (Vertex key : tree) {
+            if (l.equals(key)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Edge addEdge(Vertex sourceLeaf, Vertex targetLeaf) {
@@ -53,32 +87,32 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
 
         //Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
-        if (containsLeaves(sourceLeaf)) {
-            if (!ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(sourceLeaf, tree), targetLeaf))
-                tree.get(ListStructuresFunctions.getKeyAsVertex(sourceLeaf, tree)).add(targetLeaf);
-
-            return new EdgeImpl(sourceLeaf, targetLeaf, this);
+        if (!containsEdge(sourceLeaf, targetLeaf)) {
+            EdgeImpl e = new EdgeImpl(sourceLeaf, targetLeaf, this);
+            edgees.add(e);
+            return e;
         }
 
         return null;
     }
 
-    public boolean removeLeaves(Vertex v) {
-        //If the vertex is null or the graph doesn't contain it, returns null
-        //graph.keySet().stream().noneMatch(x -> x.getLabel().equals(v.getLabel()))
-        if (v == null || !containsLeaves(v))
-            return false;
+    public Edge addEdge(Vertex sourceLeaf, Vertex targetLeaf, double weight) {
+        //If any of the specified vertex are null, throws NullPointerException
+        if (sourceLeaf == null || targetLeaf == null)
+            throw new NullPointerException("One or more given parameter is null.");
 
-        //Removes the key (aka the vertex)
-        tree.remove(ListStructuresFunctions.getKeyAsVertex(v, tree));
+        //If the graph doesn't contain both the specified vertex, throws IllegalArgumentException
+        if (!containsLeaves(sourceLeaf) || !containsLeaves(targetLeaf))
+            throw new IllegalArgumentException("One or both vertices are not contained in the graph.");
 
-        //For each keys, checks if the LinkedList contains the vertex and if it does, deletes it
-        for (Vertex key : tree.keySet()) {
-            if (ListStructuresFunctions.adjListContains(ListStructuresFunctions.getAdjListIfExists(v, tree), v))
-                (ListStructuresFunctions.getAdjListIfExists(v, tree)).remove(tree.get(key).stream().filter(x -> x.getLabel().equals(v.getLabel())).findFirst().orElse(null));
+        //Checks if the list doesn't contain the value already, creates an edge, adds it to the edges set and returns it
+        if (!containsEdge(sourceLeaf, targetLeaf)) {
+            EdgeImpl e = new EdgeImpl(sourceLeaf, targetLeaf, weight, this);
+            edgees.add(e);
+            return e;
         }
 
-        return true;
+        return null;
     }
 
     public boolean containsEdge(Vertex sourceLeaf, Vertex targetLeaf) {
@@ -87,11 +121,24 @@ public class GraphSearchResultImpl implements GraphSearchResult {
             return false;
 
         //If the graph contains an edge from source to target, returns true. Does not consider edge weight.
-        LinkedList<Vertex> vertices = ListStructuresFunctions.getAdjListIfExists(sourceLeaf, tree);
-        if (vertices != null && vertices.size() > 0)
-            return ListStructuresFunctions.adjListContains(vertices, targetLeaf);
+        for (EdgeImpl e : edgees)
+            if (e.getSource().equals(sourceLeaf) && e.getTarget().equals(targetLeaf))
+                return true;
 
         return false;
+    }
+
+    public Edge removeEdge(Vertex sourceLeaf, Vertex targetLeaf) {
+        //Returns null if any of the specified vertex does not exist in the current graph
+        if (!containsLeaves(sourceLeaf) || !containsLeaves(targetLeaf))
+            return null;
+
+        //Finds the edge with sourceVertex and targetVertex and removes it
+        for (EdgeImpl e : edgees)
+            if (e.getSource().equals(sourceLeaf) && e.getTarget().equals(targetLeaf))
+                edgees.remove(e);
+
+        return null;
     }
 
     @Override
@@ -158,7 +205,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
      */
     private double distance(Vertex current, Vertex find, double currentDistance) {
         double distance;
-        for (Vertex neighbor : tree.get(current)) {
+        for (Vertex neighbor : getTargetEdge(current)) {
             distance = currentDistance + getEdgeWeight(current, neighbor);
             if (containsEdge(current, find))
                 return distance;
@@ -183,9 +230,9 @@ public class GraphSearchResultImpl implements GraphSearchResult {
         if (source == v)
             return null;
 
-        for (Vertex x : tree.keySet()) {
-            if (tree.get(x).getFirst() == v) {
-                return x;
+        for (EdgeImpl e : edgees) {
+            if (e.getTarget() == v) {
+                return e.getSource();
             }
         }
 
@@ -216,7 +263,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
                 queue.add(source);
                 while (!queue.isEmpty()) {
                     Vertex current = queue.element();
-                    for (Vertex neighbor : tree.get(current)) {
+                    for (Vertex neighbor : getTargetEdge(current)) {
                         count++;
                         if (v == neighbor)
                             return count;
@@ -239,7 +286,7 @@ public class GraphSearchResultImpl implements GraphSearchResult {
     private int DFSStartTime(Vertex current, Vertex find, int count) {
         if (current.equals(find))
             return count;
-        for (Vertex neighbor : tree.get(current)) {
+        for (Vertex neighbor : getTargetEdge(current)) {
             count++;
             if (containsEdge(neighbor, find)) {
                 if (DFSv == 0)
