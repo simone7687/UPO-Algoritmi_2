@@ -132,6 +132,10 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
         double[][] distance = new double[maxNVertex][maxNVertex];
 
         for (int i = 0; i < getVerticesNumber(); i++)
+            for (int j = 0; j < getVerticesNumber(); j++)
+                distance[i][j] = Double.POSITIVE_INFINITY;
+
+        for (int i = 0; i < getVerticesNumber(); i++)
             distance[i][i] = 0;
 
         for (int i = 0; i < edgees.length; i++)
@@ -143,14 +147,11 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
                 distance[s - 1][t - 1] = edgees[i].getEdgeWeight();
             }
 
-        for (int k = 0; k < getVerticesNumber() - 1; k++)
-            for (int i = 0; i < getVerticesNumber() - 1; i++)
-                for (int j = 0; j < getVerticesNumber() - 1; j++)
+        for (int k = 0; k < getVerticesNumber(); k++)
+            for (int i = 0; i < getVerticesNumber(); i++)
+                for (int j = 0; j < getVerticesNumber(); j++)
                     if (distance[i][j] > distance[i][k] + distance[k][j])  //TODO: ERRORE -2 < -2 = true
-                    {
                         distance[i][j] = distance[i][k] + distance[k][j];
-                        System.out.println(distance[i][j] + ">" + distance[i][k] + distance[k][j]);
-                    }
         return distance;
     }
 }
