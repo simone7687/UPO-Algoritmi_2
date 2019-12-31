@@ -17,7 +17,7 @@ public class DirectedGraphAdjMatr implements Graph {
 
     protected Vertex[] graph;
     protected Colors[] visitedNodes;
-    protected EdgeImpl[] edgees;
+    protected EdgeImpl[] edgees;    // TODO: errore
     private final boolean isDirected = true;
 
     /**
@@ -32,7 +32,7 @@ public class DirectedGraphAdjMatr implements Graph {
     /**
      * @return the number of vertices of the graph.
      */
-    private int getVerticesNumber() {
+    protected int getVerticesNumber() {
         return vertexSet().size();
     }
 
@@ -185,6 +185,7 @@ public class DirectedGraphAdjMatr implements Graph {
         }
         return false;
     }
+
 
     /**
      * Returns <tt>true</tt> if this graph contains the specified vertex. More

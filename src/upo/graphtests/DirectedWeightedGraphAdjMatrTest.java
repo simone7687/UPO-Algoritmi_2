@@ -417,4 +417,35 @@ public class DirectedWeightedGraphAdjMatrTest {
 
         assertEquals("{{A,C,B},{D},{E}}", graph.toStringSCC());
     }
+
+    @Test
+    public void allToAllShortestPathsTest() {
+        VertexImpl v0 = new VertexImpl("A", graph);
+        graph.addVertex(v0);
+
+        VertexImpl v1 = new VertexImpl("B", graph);
+        graph.addVertex(v1);
+
+        VertexImpl v2 = new VertexImpl("C", graph);
+        graph.addVertex(v2);
+
+        VertexImpl v3 = new VertexImpl("D", graph);
+        graph.addVertex(v3);
+
+        assertNotNull(graph.addEdge(v0, v2, -2));
+        assertNotNull(graph.addEdge(v2, v3, 2));
+        assertNotNull(graph.addEdge(v3, v1, -1));
+        assertNotNull(graph.addEdge(v1, v0, 4));
+        assertNotNull(graph.addEdge(v1, v2, 3));
+
+        double a[][] = {
+                {1000, -1, -2, 200},
+                {4, 3000, 400, 4},
+                {5, 1, 500, 2},
+                {3, -1, 1, 600}
+        };
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                assertEquals(a[i][j], graph.allToAllShortestPaths()[i][j], 0);
+    }
 }

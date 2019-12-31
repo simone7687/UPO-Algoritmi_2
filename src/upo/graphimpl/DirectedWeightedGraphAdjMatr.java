@@ -85,9 +85,7 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
 
         switch (type) {
             case BFS:
-                throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");
             case DFS:
-                throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");
             case DFS_TOT:
                 throw new UnsupportedOperationException("This visit cannot be performed on unweighted graphs");
             case DIJKSTRA:
@@ -107,13 +105,13 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
                         if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE)) {
                             queue.add(neighbor);
                             tree.addLeaves(neighbor);
-                            tree.addEdge(current, neighbor);    //TODO: cambiare
+                            tree.addEdge(current, neighbor);        //TODO: cambiare (agiungere peso)
                             setColorVertextVisitedNodes(neighbor, Colors.GREY);
                         } else if (visitedNodes[findVertex(neighbor)].equals(Colors.GREY)) {
                             if (tree.getDistance(neighbor) > tree.getDistance(current) + getEdgeWeight(current, neighbor)) {
                                 tree.removeLeaves(neighbor);
                                 tree.addLeaves(neighbor);
-                                tree.addEdge(current, neighbor);    //TODO: cambiare
+                                tree.addEdge(current, neighbor);    //TODO: cambiare (agiungere peso)
                             }
                         }
                     }
@@ -131,8 +129,28 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
      * TODO: javdoc
      */
     public double[][] allToAllShortestPaths() {
-        double[][] paths = new double[maxNVertex][maxNVertex];
-        //TODO:...
-        return paths;
+        double[][] distance = new double[maxNVertex][maxNVertex];
+
+        for (int i = 0; i < getVerticesNumber(); i++)
+            distance[i][i] = 0;
+
+        for (int i = 0; i < edgees.length; i++)
+            if (edgees[i] != null) {
+                Vertex vs = edgees[i].getSource();
+                Vertex vt = edgees[i].getTarget();
+                int s = findVertex(vs);
+                int t = findVertex(vt);
+                distance[s - 1][t - 1] = edgees[i].getEdgeWeight();
+            }
+
+        for (int k = 0; k < getVerticesNumber() - 1; k++)
+            for (int i = 0; i < getVerticesNumber() - 1; i++)
+                for (int j = 0; j < getVerticesNumber() - 1; j++)
+                    if (distance[i][j] > distance[i][k] + distance[k][j])  //TODO: ERRORE -2 < -2 = true
+                    {
+                        distance[i][j] = distance[i][k] + distance[k][j];
+                        System.out.println(distance[i][j] + ">" + distance[i][k] + distance[k][j]);
+                    }
+        return distance;
     }
 }

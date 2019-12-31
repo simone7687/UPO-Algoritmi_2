@@ -135,7 +135,7 @@ public class DirectedGraphAdjListTest {
         VertexImpl v1 = new VertexImpl("B", graph);
         graph.addVertex(v1);
 
-        graph.addEdge(v0, v1);//TODO:
+        graph.addEdge(v0, v1);
         assertFalse(graph.containsEdge(new VertexImpl("F", graph), v0));
         assertFalse(graph.containsEdge(v0, new VertexImpl("F", graph)));
 

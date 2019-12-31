@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class EdgeImpl implements DirectedEdge {
-    private double edgeWeight;
+    private double edgeWeight = 0;
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Graph graph;
