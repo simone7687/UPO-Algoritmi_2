@@ -67,6 +67,15 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
                         edgees[i].setEdgeWeight(weight);
     }
 
+    private int findEdge(Vertex sourceVertex, Vertex targetVertex) {
+        for(int i = 0; i < edgees.length; i++) {
+            if (edgees[i] != null)
+                if (edgees[i].getSource() == sourceVertex && edgees[i].getTarget() == targetVertex)
+                    return i;
+        }
+        throw new UnsupportedOperationException("");
+    }
+
     /**
      * TODO: java doc
      */
@@ -105,13 +114,19 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
                         if (visitedNodes[findVertex(neighbor)].equals(Colors.WHITE)) {
                             queue.add(neighbor);
                             tree.addLeaves(neighbor);
-                            tree.addEdge(current, neighbor);        //TODO: cambiare (agiungere peso)
+                            if (containsEdge(current, neighbor))
+                                tree.addEdge(current, neighbor, edgees[findEdge(current, neighbor)].getEdgeWeight());
+                            else
+                                tree.addEdge(current, neighbor);
                             setColorVertextVisitedNodes(neighbor, Colors.GREY);
                         } else if (visitedNodes[findVertex(neighbor)].equals(Colors.GREY)) {
                             if (tree.getDistance(neighbor) > tree.getDistance(current) + getEdgeWeight(current, neighbor)) {
                                 tree.removeLeaves(neighbor);
                                 tree.addLeaves(neighbor);
-                                tree.addEdge(current, neighbor);    //TODO: cambiare (agiungere peso)
+                                if (containsEdge(current, neighbor))
+                                    tree.addEdge(current, neighbor, edgees[findEdge(current, neighbor)].getEdgeWeight());
+                                else
+                                    tree.addEdge(current, neighbor);
                             }
                         }
                     }
@@ -150,7 +165,7 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
         for (int k = 0; k < getVerticesNumber(); k++)
             for (int i = 0; i < getVerticesNumber(); i++)
                 for (int j = 0; j < getVerticesNumber(); j++)
-                    if (distance[i][j] > distance[i][k] + distance[k][j])  //TODO: ERRORE -2 < -2 = true
+                    if (distance[i][j] > distance[i][k] + distance[k][j])
                         distance[i][j] = distance[i][k] + distance[k][j];
         return distance;
     }
