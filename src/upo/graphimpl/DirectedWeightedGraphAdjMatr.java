@@ -70,7 +70,7 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
     }
 
     private int findEdge(Vertex sourceVertex, Vertex targetVertex) {
-        for(int i = 0; i < edgees.length; i++) {
+        for (int i = 0; i < edgees.length; i++) {
             if (edgees[i] != null)
                 if (edgees[i].getSource() == sourceVertex && edgees[i].getTarget() == targetVertex)
                     return i;
@@ -82,12 +82,9 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
      * Performs a visit (of type <code>type</code>) over the current graph.
      *
      * @param type the search type.
-     *
-     * @throws UnsupportedOperationException if the visit cannot be performed on the current graph
-     * (e.g., a Dijkstra visit on an unweighted graph).
-     *
      * @return a GraphSearchtreeult reptreeenting the treeult of the visit performed.
-     *
+     * @throws UnsupportedOperationException if the visit cannot be performed on the current graph
+     *                                       (e.g., a Dijkstra visit on an unweighted graph).
      */
     @Override
     public GraphSearchResult visit(SearchType type) throws UnsupportedOperationException {
@@ -151,9 +148,9 @@ public class DirectedWeightedGraphAdjMatr extends DirectedGraphAdjMatr implement
     }
 
     /**
-     * Calculate the shortest paths between all 
+     * Calculate the shortest paths between all
      * the pairs of vertices, using the Floyd Warshall algorithm
-     * 
+     *
      * @return the shortest paths between all the pairs of vertices
      */
     public double[][] allToAllShortestPaths() {

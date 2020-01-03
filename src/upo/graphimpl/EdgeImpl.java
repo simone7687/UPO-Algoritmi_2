@@ -73,7 +73,7 @@ public class EdgeImpl implements DirectedEdge {
 
     /**
      * Set the weight of the Edge
-     * 
+     *
      * @param edgeWeight
      */
     public void setEdgeWeight(double edgeWeight) {
