@@ -19,3 +19,5 @@ NOTA1: notate che lo pseudocodice mostrato nelle slide si riferisce a grafi impl
 
 NOTA2: chi avesse già sviluppato grafi pesati per il compito pratico 1, oltre ad implementare Dijkstra e Floyd Warshall, si dedichi a sviluppare una classe per grafi diretti non pesati implementati con matrici di adiacenza. In questo modo, la consegna conterrà sia una classe che implementa grafi pesati, sia una che implementa grafi non pesati.
 
+## Compito pratico 3
+Implementare in Java una funzione (basta un file Java con la funzione, e un test JUnit o un main che la testino) che calcola la LCS di 2 array di char dati in input, utilizzando l'algoritmo di programmazione dinamica visto a lezione. Non usi metodi Java che trovano la LCS. Le scrivo qui sotto la possibile intestazione. public static char[] LCS(char[] S1, char[] S2)
