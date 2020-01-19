@@ -3,7 +3,7 @@ package upo.lcs;
 import java.util.Arrays;
 
 public class LongestCommonSubsequence {
-    public static char[] lcss(char[] a, char[] b) {
+    public static char[] LCS(char[] a, char[] b) {
         int n = a.length;
         int m = b.length;
         char[][] lcs = new char[n + 1][m + 1];
@@ -43,6 +43,6 @@ public class LongestCommonSubsequence {
         System.out.println(X);
         System.out.println(Y);
 
-        System.out.println(Arrays.toString(LongestCommonSubsequence.lcss(X, Y)));
+        System.out.println(Arrays.toString(LongestCommonSubsequence.LCS(X, Y)));
     }
 }
